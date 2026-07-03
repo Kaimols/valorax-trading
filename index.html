@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ValoraX Trading</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #000;
+            color: white;
+            overflow: hidden;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        #splash {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            text-align: center;
+            animation: fadeIn 0.9s ease forwards;
+        }
+
+        #splash h1,
+        #splash h2 {
+            font-size: 66px;
+            font-weight: 600;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        #splash h1 span {
+            color: #22c55e;
+            text-shadow: 0 0 18px rgba(34, 197, 94, 0.45);
+        }
+
+        #chart {
+            width: 120px;
+            height: 45px;
+            margin: 14px auto 16px;
+        }
+
+        #chart path {
+            fill: none;
+            stroke: #22c55e;
+            stroke-width: 5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 220;
+            stroke-dashoffset: 220;
+            animation: drawLine 1.1s ease forwards;
+        }
+
+        #startPage,
+        #registerPage,
+        #loginPage {
+            display: none;
+            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            background:
+                radial-gradient(circle at top, rgba(34, 197, 94, 0.13), transparent 36%),
+                radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.08), transparent 34%),
+                #000;
+            opacity: 0;
+        }
+
+        #startBox,
+        #registerBox,
+        #loginBox {
+            width: 440px;
+            padding: 42px 34px;
+            border-radius: 26px;
+            background: rgba(255, 255, 255, 0.045);
+            border: 1px solid rgba(255, 255, 255, 0.11);
+            box-shadow: 0 0 55px rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+        }
+
+        #brand,
+        #registerBrand,
+        #loginBrand {
+            text-align: center;
+            font-size: 30px;
+            font-weight: 650;
+            margin-bottom: 28px;
+        }
+
+        #brand span,
+        #registerBrand span,
+        #loginBrand span {
+            color: #22c55e;
+            text-shadow: 0 0 14px rgba(34, 197, 94, 0.5);
+        }
+
+        h1 {
+            font-size: 34px;
+            font-weight: 650;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #9ca3af;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        #startBox p,
+        #registerSubtitle,
+        #loginBox p {
+            margin-bottom: 30px;
+        }
+
+        #registerStep {
+            color: #22c55e;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        label {
+            display: block;
+            color: #d1d5db;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            height: 52px;
+            padding: 0 15px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.13);
+            background: rgba(255, 255, 255, 0.055);
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: 0.25s;
+        }
+
+        input:focus {
+            border-color: #22c55e;
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.13);
+        }
+
+        input::placeholder {
+            color: #6b7280;
+        }
+
+        #phoneWrapper,
+        #loginPhoneWrapper {
+            width: 100%;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 15px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.13);
+            background: rgba(255, 255, 255, 0.055);
+            transition: 0.25s;
+        }
+
+        #phoneWrapper:focus-within,
+        #loginPhoneWrapper:focus-within {
+            border-color: #22c55e;
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.13);
+        }
+
+        #phoneWrapper span,
+        #loginPhoneWrapper span {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 650;
+        }
+
+        #phoneWrapper input,
+        #loginPhoneWrapper input {
+            flex: 1;
+            min-width: 0;
+            height: 100%;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+
+        #phoneWrapper input:focus,
+        #loginPhoneWrapper input:focus {
+            border: none;
+            box-shadow: none;
+        }
+
+        button {
+            width: 100%;
+            height: 52px;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 750;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        #openRegisterButton,
+        #phoneNext,
+        #emailNext {
+            border: none;
+            background: #22c55e;
+            color: #000;
+            margin-top: 18px;
+        }
+
+        #openLoginButton,
+        #emailBack,
+        #pinBack,
+        #confirmBack {
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: transparent;
+            color: #fff;
+            margin-top: 14px;
+        }
+
+        #openRegisterButton:hover,
+        #phoneNext:hover,
+        #emailNext:hover {
+            background: #16a34a;
+            transform: translateY(-2px);
+            box-shadow: 0 0 24px rgba(34, 197, 94, 0.35);
+        }
+
+        #openLoginButton:hover,
+        #emailBack:hover,
+        #pinBack:hover,
+        #confirmBack:hover {
+            border-color: #22c55e;
+            color: #22c55e;
+            transform: translateY(-2px);
+        }
+
+        #phoneStep,
+        #emailStep,
+        #pinStep,
+        #confirmStep {
+            display: none;
+        }
+
+        #registerMessage,
+        #loginMessage {
+            min-height: 22px;
+            margin-top: 18px;
+            text-align: center;
+            font-size: 14px;
+            color: #ef4444;
+        }
+
+        #loginText,
+        #registerText {
+            margin-top: 20px;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        #toLogin,
+        #toRegister {
+            color: #22c55e;
+            cursor: pointer;
+            font-weight: 650;
+        }
+
+        #pinDots,
+        #confirmDots,
+        #loginDots {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin: 24px 0 24px;
+        }
+
+        #pinDots span,
+        #confirmDots span,
+        #loginDots span {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            transition: 0.2s;
+        }
+
+        #pinPad,
+        #confirmPad,
+        #loginPad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        #pinPad button,
+        #confirmPad button,
+        #loginPad button {
+            height: 58px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.055);
+            color: white;
+            font-size: 22px;
+            font-weight: 650;
+        }
+
+        #pinPad button:hover,
+        #confirmPad button:hover,
+        #loginPad button:hover {
+            border-color: #22c55e;
+            color: #22c55e;
+            transform: translateY(-2px);
+        }
+
+        #pinPad button:disabled,
+        #confirmPad button:disabled,
+        #loginPad button:disabled {
+            opacity: 0;
+            cursor: default;
+            transform: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes drawLine {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: scale(0.97);
+            }
+        }
+
+        @keyframes showPage {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            #splash h1,
+            #splash h2 {
+                font-size: 46px;
+            }
+
+            #startBox,
+            #registerBox,
+            #loginBox {
+                width: 100%;
+                padding: 36px 24px;
+            }
+
+            h1 {
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="splash">
+        <div>
+            <h1>Valora<span>X</span></h1>
+
+            <svg id="chart" viewBox="0 0 120 45">
+                <path d="M5 34 L27 16 L48 28 L70 10 L89 23 L115 6"></path>
+            </svg>
+
+            <h2>Trading</h2>
+        </div>
+    </div>
+
+    <div id="startPage">
+        <div id="startBox">
+            <div id="brand">Valora<span>X</span> Trading</div>
+
+            <h1>Willkommen</h1>
+            <p>Erstelle ein Konto oder logge dich ein, um mit Paper Trading zu starten.</p>
+
+            <button id="openRegisterButton">Konto erstellen</button>
+            <button id="openLoginButton">Einloggen</button>
+        </div>
+    </div>
+
+    <div id="registerPage">
+        <div id="registerBox">
+            <div id="registerBrand">Valora<span>X</span> Trading</div>
+
+            <div id="registerStep">Schritt 1 von 4</div>
+
+            <h1 id="registerTitle">Handynummer</h1>
+            <p id="registerSubtitle">Gib zuerst deine deutsche Handynummer ein.</p>
+
+            <div id="phoneStep">
+                <label for="phoneInput">Handynummer</label>
+
+                <div id="phoneWrapper">
+                    <span>+49</span>
+                    <input id="phoneInput" type="tel" placeholder="170 1234567" autocomplete="tel" inputmode="numeric">
+                </div>
+
+                <button id="phoneNext">Weiter</button>
+            </div>
+
+            <div id="emailStep">
+                <label for="emailInput">E-Mail-Adresse</label>
+                <input id="emailInput" type="email" placeholder="name@email.de" autocomplete="email">
+
+                <button id="emailNext">Weiter</button>
+                <button id="emailBack">Zurück</button>
+            </div>
+
+            <div id="pinStep">
+                <p>Erstelle eine 4-stellige PIN.</p>
+                <div id="pinDots"></div>
+                <div id="pinPad"></div>
+
+                <button id="pinBack">Zurück</button>
+            </div>
+
+            <div id="confirmStep">
+                <p>Bestätige deine 4-stellige PIN.</p>
+                <div id="confirmDots"></div>
+                <div id="confirmPad"></div>
+
+                <button id="confirmBack">PIN ändern</button>
+            </div>
+
+            <p id="registerMessage"></p>
+
+            <p id="loginText">
+                Schon ein Konto?
+                <span id="toLogin">Einloggen</span>
+            </p>
+        </div>
+    </div>
+
+    <div id="loginPage">
+        <div id="loginBox">
+            <div id="loginBrand">Valora<span>X</span> Trading</div>
+
+            <h1>Einloggen</h1>
+            <p>Melde dich mit deiner deutschen Handynummer an.</p>
+
+            <label for="loginIdentifier">Handynummer</label>
+
+            <div id="loginPhoneWrapper">
+                <span>+49</span>
+                <input id="loginIdentifier" type="tel" placeholder="170 1234567" autocomplete="tel" inputmode="numeric">
+            </div>
+
+            <p style="margin-top: 22px;">Gib deine 4-stellige PIN ein.</p>
+
+            <div id="loginDots"></div>
+            <div id="loginPad"></div>
+
+            <p id="loginMessage"></p>
+
+            <p id="registerText">
+                Noch kein Konto?
+                <span id="toRegister">Konto erstellen</span>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let registerData = {
+            phone: "",
+            email: "",
+            pin: "",
+            confirmPin: ""
+        };
+
+        let loginPin = "";
+
+        setTimeout(function () {
+            document.getElementById("splash").style.animation = "fadeOut 0.8s ease forwards";
+        }, 2000);
+
+        setTimeout(function () {
+            document.getElementById("splash").style.display = "none";
+            document.body.style.overflow = "auto";
+            openCorrectPage();
+        }, 2800);
+
+        function readStorage(key, fallback) {
+            try {
+                return JSON.parse(localStorage.getItem(key)) || fallback;
+            } catch (error) {
+                return fallback;
+            }
+        }
+
+        function getUsers() {
+            return readStorage("valorax_users", []);
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem("valorax_users", JSON.stringify(users));
+        }
+
+        function getCurrentUser() {
+            return readStorage("valorax_current_user", null);
+        }
+
+        function setCurrentUser(user) {
+            localStorage.setItem("valorax_current_user", JSON.stringify({
+                id: user.id,
+                phone: user.phone,
+                email: user.email,
+                balance: user.balance
+            }));
+        }
+
+        function goToSite(mode) {
+            if (mode) {
+                sessionStorage.setItem("valorax_entry_mode", mode);
+            }
+
+            window.location.href = "site.html";
+        }
+
+        function simpleHash(text) {
+            let hash = 0;
+            const value = "valorax_" + text;
+
+            for (let i = 0; i < value.length; i++) {
+                hash = ((hash << 5) - hash) + value.charCodeAt(i);
+                hash = hash & hash;
+            }
+
+            return "demo_" + Math.abs(hash).toString(16);
+        }
+
+        function getGermanPhone(inputId) {
+            let localDigits = document.getElementById(inputId).value.replace(/\D/g, "");
+
+            if (localDigits.startsWith("0049")) {
+                localDigits = localDigits.slice(4);
+            }
+
+            if (localDigits.startsWith("49")) {
+                localDigits = localDigits.slice(2);
+            }
+
+            if (localDigits.startsWith("0")) {
+                localDigits = localDigits.slice(1);
+            }
+
+            return {
+                localDigits: localDigits,
+                display: "+49 " + localDigits,
+                normalized: "49" + localDigits
+            };
+        }
+
+        function normalizeGermanPhone(phone) {
+            let digits = String(phone).replace(/\D/g, "");
+
+            if (digits.startsWith("0049")) {
+                digits = "49" + digits.slice(4);
+            }
+
+            if (digits.startsWith("49")) {
+                return digits;
+            }
+
+            if (digits.startsWith("0")) {
+                return "49" + digits.slice(1);
+            }
+
+            return "49" + digits;
+        }
+
+        function showPage(pageId) {
+            document.getElementById("startPage").style.display = "none";
+            document.getElementById("registerPage").style.display = "none";
+            document.getElementById("loginPage").style.display = "none";
+
+            const page = document.getElementById(pageId);
+
+            page.style.display = "flex";
+            page.style.animation = "none";
+            page.offsetHeight;
+            page.style.animation = "showPage 0.7s ease forwards";
+        }
+
+        function openCorrectPage() {
+            const users = getUsers();
+            const currentUser = getCurrentUser();
+
+            if (currentUser) {
+                const userStillExists = users.some(function (user) {
+                    return user.id === currentUser.id;
+                });
+
+                if (userStillExists) {
+                    goToSite("return");
+                    return;
+                }
+
+                localStorage.removeItem("valorax_current_user");
+            }
+
+            if (users.length > 0) {
+                showPage("loginPage");
+            } else {
+                showPage("startPage");
+            }
+        }
+
+        function setRegisterMessage(text, color) {
+            const message = document.getElementById("registerMessage");
+            message.textContent = text;
+            message.style.color = color;
+        }
+
+        function setLoginMessage(text, color) {
+            const message = document.getElementById("loginMessage");
+            message.textContent = text;
+            message.style.color = color;
+        }
+
+        function showRegisterStep(stepId) {
+            document.getElementById("phoneStep").style.display = "none";
+            document.getElementById("emailStep").style.display = "none";
+            document.getElementById("pinStep").style.display = "none";
+            document.getElementById("confirmStep").style.display = "none";
+
+            document.getElementById(stepId).style.display = "block";
+            setRegisterMessage("", "#ef4444");
+
+            if (stepId === "phoneStep") {
+                document.getElementById("registerStep").textContent = "Schritt 1 von 4";
+                document.getElementById("registerTitle").textContent = "Handynummer";
+                document.getElementById("registerSubtitle").textContent = "Gib zuerst deine deutsche Handynummer ein.";
+            }
+
+            if (stepId === "emailStep") {
+                document.getElementById("registerStep").textContent = "Schritt 2 von 4";
+                document.getElementById("registerTitle").textContent = "E-Mail-Adresse";
+                document.getElementById("registerSubtitle").textContent = "Jetzt brauchen wir deine E-Mail-Adresse.";
+            }
+
+            if (stepId === "pinStep") {
+                document.getElementById("registerStep").textContent = "Schritt 3 von 4";
+                document.getElementById("registerTitle").textContent = "PIN erstellen";
+                document.getElementById("registerSubtitle").textContent = "Wähle eine 4-stellige PIN für dein Konto.";
+            }
+
+            if (stepId === "confirmStep") {
+                document.getElementById("registerStep").textContent = "Schritt 4 von 4";
+                document.getElementById("registerTitle").textContent = "PIN bestätigen";
+                document.getElementById("registerSubtitle").textContent = "Gib deine PIN zur Sicherheit nochmal ein.";
+            }
+        }
+
+        function startRegister() {
+            registerData.phone = "";
+            registerData.email = "";
+            registerData.pin = "";
+            registerData.confirmPin = "";
+
+            document.getElementById("phoneInput").value = "";
+            document.getElementById("emailInput").value = "";
+
+            updateDots("pinDots", 0);
+            updateDots("confirmDots", 0);
+
+            showPage("registerPage");
+            showRegisterStep("phoneStep");
+        }
+
+        function updateDots(containerId, count) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = "";
+
+            for (let i = 0; i < 4; i++) {
+                const dot = document.createElement("span");
+
+                if (i < count) {
+                    dot.style.background = "#22c55e";
+                    dot.style.borderColor = "#22c55e";
+                    dot.style.boxShadow = "0 0 12px rgba(34, 197, 94, 0.6)";
+                }
+
+                container.appendChild(dot);
+            }
+        }
+
+        function createNumberPad(padId, numberHandler, deleteHandler) {
+            const pad = document.getElementById(padId);
+            const values = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", "⌫"];
+
+            pad.innerHTML = "";
+
+            values.forEach(function (value) {
+                const button = document.createElement("button");
+                button.type = "button";
+                button.textContent = value;
+
+                if (value === "") {
+                    button.disabled = true;
+                } else if (value === "⌫") {
+                    button.onclick = deleteHandler;
+                } else {
+                    button.onclick = function () {
+                        numberHandler(value);
+                    };
+                }
+
+                pad.appendChild(button);
+            });
+        }
+
+        function createAccount() {
+            const users = getUsers();
+
+            const newUser = {
+                id: Date.now().toString() + Math.random().toString(16).slice(2),
+                phone: registerData.phone,
+                email: registerData.email,
+                pinHash: simpleHash(registerData.pin),
+                balance: 10000,
+                createdAt: new Date().toISOString()
+            };
+
+            users.push(newUser);
+            saveUsers(users);
+            setCurrentUser(newUser);
+
+            setRegisterMessage("Konto erfolgreich erstellt.", "#22c55e");
+
+            setTimeout(function () {
+                goToSite("new");
+            }, 700);
+        }
+
+        document.getElementById("openRegisterButton").onclick = function () {
+            startRegister();
+        };
+
+        document.getElementById("openLoginButton").onclick = function () {
+            showPage("loginPage");
+        };
+
+        document.getElementById("toLogin").onclick = function () {
+            showPage("loginPage");
+        };
+
+        document.getElementById("toRegister").onclick = function () {
+            startRegister();
+        };
+
+        document.getElementById("phoneNext").onclick = function () {
+            const phoneData = getGermanPhone("phoneInput");
+
+            if (phoneData.localDigits.length < 8) {
+                setRegisterMessage("Bitte gib eine gültige Handynummer ein.", "#ef4444");
+                return;
+            }
+
+            const users = getUsers();
+
+            const phoneExists = users.some(function (user) {
+                return normalizeGermanPhone(user.phone) === phoneData.normalized;
+            });
+
+            if (phoneExists) {
+                setRegisterMessage("Mit dieser Handynummer existiert bereits ein Konto.", "#ef4444");
+                return;
+            }
+
+            registerData.phone = phoneData.display;
+            showRegisterStep("emailStep");
+        };
+
+        document.getElementById("emailNext").onclick = function () {
+            const email = document.getElementById("emailInput").value.trim();
+            const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+            if (!emailIsValid) {
+                setRegisterMessage("Bitte gib eine gültige E-Mail-Adresse ein.", "#ef4444");
+                return;
+            }
+
+            const users = getUsers();
+
+            const emailExists = users.some(function (user) {
+                return user.email.toLowerCase() === email.toLowerCase();
+            });
+
+            if (emailExists) {
+                setRegisterMessage("Mit dieser E-Mail existiert bereits ein Konto.", "#ef4444");
+                return;
+            }
+
+            registerData.email = email;
+            registerData.pin = "";
+            updateDots("pinDots", 0);
+            showRegisterStep("pinStep");
+        };
+
+        document.getElementById("emailBack").onclick = function () {
+            showRegisterStep("phoneStep");
+        };
+
+        document.getElementById("pinBack").onclick = function () {
+            registerData.pin = "";
+            updateDots("pinDots", 0);
+            showRegisterStep("emailStep");
+        };
+
+        document.getElementById("confirmBack").onclick = function () {
+            registerData.pin = "";
+            registerData.confirmPin = "";
+            updateDots("pinDots", 0);
+            updateDots("confirmDots", 0);
+            showRegisterStep("pinStep");
+        };
+
+        createNumberPad("pinPad", function (number) {
+            if (registerData.pin.length >= 4) {
+                return;
+            }
+
+            registerData.pin += number;
+            updateDots("pinDots", registerData.pin.length);
+
+            if (registerData.pin.length === 4) {
+                setTimeout(function () {
+                    registerData.confirmPin = "";
+                    updateDots("confirmDots", 0);
+                    showRegisterStep("confirmStep");
+                }, 250);
+            }
+        }, function () {
+            registerData.pin = registerData.pin.slice(0, -1);
+            updateDots("pinDots", registerData.pin.length);
+        });
+
+        createNumberPad("confirmPad", function (number) {
+            if (registerData.confirmPin.length >= 4) {
+                return;
+            }
+
+            registerData.confirmPin += number;
+            updateDots("confirmDots", registerData.confirmPin.length);
+
+            if (registerData.confirmPin.length === 4) {
+                if (registerData.confirmPin !== registerData.pin) {
+                    setRegisterMessage("Die PIN stimmt nicht überein.", "#ef4444");
+
+                    setTimeout(function () {
+                        registerData.confirmPin = "";
+                        updateDots("confirmDots", 0);
+                    }, 500);
+
+                    return;
+                }
+
+                createAccount();
+            }
+        }, function () {
+            registerData.confirmPin = registerData.confirmPin.slice(0, -1);
+            updateDots("confirmDots", registerData.confirmPin.length);
+        });
+
+        createNumberPad("loginPad", function (number) {
+            if (loginPin.length >= 4) {
+                return;
+            }
+
+            loginPin += number;
+            updateDots("loginDots", loginPin.length);
+
+            if (loginPin.length === 4) {
+                const phoneData = getGermanPhone("loginIdentifier");
+
+                if (phoneData.localDigits.length < 8) {
+                    setLoginMessage("Bitte gib eine gültige Handynummer ein.", "#ef4444");
+                    loginPin = "";
+                    updateDots("loginDots", 0);
+                    return;
+                }
+
+                const users = getUsers();
+
+                const user = users.find(function (user) {
+                    return normalizeGermanPhone(user.phone) === phoneData.normalized;
+                });
+
+                if (!user || user.pinHash !== simpleHash(loginPin)) {
+                    setLoginMessage("Handynummer oder PIN ist falsch.", "#ef4444");
+
+                    setTimeout(function () {
+                        loginPin = "";
+                        updateDots("loginDots", 0);
+                    }, 500);
+
+                    return;
+                }
+
+                setCurrentUser(user);
+                setLoginMessage("Erfolgreich eingeloggt.", "#22c55e");
+
+                setTimeout(function () {
+                    loginPin = "";
+                    updateDots("loginDots", 0);
+                    goToSite("login");
+                }, 500);
+            }
+        }, function () {
+            loginPin = loginPin.slice(0, -1);
+            updateDots("loginDots", loginPin.length);
+        });
+
+        updateDots("pinDots", 0);
+        updateDots("confirmDots", 0);
+        updateDots("loginDots", 0);
+    </script>
+
+</body>
+</html>
