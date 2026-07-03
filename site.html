@@ -208,6 +208,79 @@
             cursor: pointer;
         }
 
+        #marketOverview {
+            padding: 0;
+            overflow: hidden;
+        }
+
+        #marketRows {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .marketRow {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 14px;
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .marketRow:hover {
+            background: #151515;
+        }
+
+        .marketRow:last-child {
+            border-bottom: none;
+        }
+
+        .marketLeft {
+            min-width: 0;
+        }
+
+        .marketSymbol {
+            display: block;
+            color: white;
+            font-size: 17px;
+            font-weight: 760;
+        }
+
+        .marketName {
+            display: block;
+            color: #8f8f8f;
+            font-size: 13px;
+            margin-top: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .marketRight {
+            text-align: right;
+        }
+
+        .marketPrice {
+            display: block;
+            color: white;
+            font-size: 17px;
+            font-weight: 760;
+        }
+
+        .marketChange {
+            display: block;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        #marketStatus {
+            color: #8f8f8f;
+            font-size: 13px;
+            padding: 14px 20px 18px;
+            line-height: 1.5;
+        }
+
         #marketSearchCard {
             display: flex;
             flex-direction: column;
@@ -508,7 +581,19 @@
 
         <section class="section" id="marketSection">
             <div class="sectionHeader">
-                <h2>Marktdaten</h2>
+                <h2>Märkte</h2>
+                <button id="refreshMarketsButton">Aktualisieren</button>
+            </div>
+
+            <div id="marketOverview" class="card">
+                <div id="marketRows"></div>
+                <p id="marketStatus">Kurse werden geladen...</p>
+            </div>
+        </section>
+
+        <section class="section" id="searchSection">
+            <div class="sectionHeader">
+                <h2>Suche</h2>
             </div>
 
             <div id="marketSearchCard" class="card">
@@ -627,6 +712,15 @@
     </nav>
 
     <script>
+        const defaultMarketSymbols = [
+            "AAPL",
+            "MSFT",
+            "TSLA",
+            "NVDA",
+            "AMZN",
+            "BTC/USD"
+        ];
+
         function readStorage(key, fallback) {
             try {
                 return JSON.parse(localStorage.getItem(key)) || fallback;
@@ -663,7 +757,7 @@
             });
         }
 
-        function formatPrice(value, currency) {
+        function formatQuotePrice(value, currency) {
             const number = Number(value || 0);
 
             if (currency === "EUR") {
@@ -684,6 +778,27 @@
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             }) + " " + currency;
+        }
+
+        function formatPercent(value) {
+            const number = Number(value || 0);
+            const prefix = number > 0 ? "+" : "";
+
+            return prefix + number.toFixed(2).replace(".", ",") + "%";
+        }
+
+        function getChangeColor(value) {
+            const number = Number(value || 0);
+
+            if (number > 0) {
+                return "#22c55e";
+            }
+
+            if (number < 0) {
+                return "#ef4444";
+            }
+
+            return "#8f8f8f";
         }
 
         function setActiveNav(buttonId) {
@@ -716,7 +831,7 @@
 
             if (!currentUser) {
                 window.location.replace("index.html");
-                return;
+                return false;
             }
 
             const users = getUsers();
@@ -728,7 +843,7 @@
             if (!savedUser) {
                 localStorage.removeItem("valorax_current_user");
                 window.location.replace("index.html");
-                return;
+                return false;
             }
 
             if (savedUser.accountSchemaVersion !== 2) {
@@ -765,6 +880,89 @@
                 document.getElementById("portfolioChange").textContent =
                     "Willkommen zurück · 0,00 % heute";
             }
+
+            return true;
+        }
+
+        function renderMarketRows(quotes) {
+            const container = document.getElementById("marketRows");
+            container.innerHTML = "";
+
+            quotes.forEach(function (quote) {
+                const row = document.createElement("div");
+                row.className = "marketRow";
+
+                const left = document.createElement("div");
+                left.className = "marketLeft";
+
+                const symbol = document.createElement("span");
+                symbol.className = "marketSymbol";
+                symbol.textContent = quote.symbol;
+
+                const name = document.createElement("span");
+                name.className = "marketName";
+                name.textContent = quote.name || quote.exchange || "Marktdaten";
+
+                left.appendChild(symbol);
+                left.appendChild(name);
+
+                const right = document.createElement("div");
+                right.className = "marketRight";
+
+                const price = document.createElement("span");
+                price.className = "marketPrice";
+                price.textContent = formatQuotePrice(quote.price, quote.currency);
+
+                const change = document.createElement("span");
+                change.className = "marketChange";
+                change.textContent = formatPercent(quote.percentChange);
+                change.style.color = getChangeColor(quote.percentChange);
+
+                right.appendChild(price);
+                right.appendChild(change);
+
+                row.appendChild(left);
+                row.appendChild(right);
+
+                row.onclick = function () {
+                    scrollToSection("searchSection", "navSearch");
+                    document.getElementById("symbolInput").value = quote.symbol;
+                    loadQuote();
+                };
+
+                container.appendChild(row);
+            });
+        }
+
+        async function loadMarketOverview() {
+            const status = document.getElementById("marketStatus");
+
+            status.textContent = "Kurse werden geladen...";
+
+            try {
+                const response = await fetch(
+                    "/api/quotes?symbols=" + encodeURIComponent(defaultMarketSymbols.join(","))
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    status.textContent = data.error || "Kurse konnten nicht geladen werden.";
+                    return;
+                }
+
+                if (!data.quotes || data.quotes.length === 0) {
+                    status.textContent = "Keine Kurse gefunden.";
+                    return;
+                }
+
+                renderMarketRows(data.quotes);
+
+                status.textContent =
+                    "Quelle: " + (data.source || "Marktdaten") + " · automatische Aktualisierung aktiv";
+            } catch (error) {
+                status.textContent = "Fehler beim Laden der Marktübersicht. Prüfe, ob /api/quotes eingerichtet ist.";
+            }
         }
 
         async function loadQuote() {
@@ -797,16 +995,13 @@
                 document.getElementById("quoteSymbol").textContent = data.symbol;
 
                 document.getElementById("quotePrice").textContent =
-                    formatPrice(data.price, data.currency);
-
-                const percent = Number(data.percentChange || 0);
-                const prefix = percent > 0 ? "+" : "";
+                    formatQuotePrice(data.price, data.currency);
 
                 document.getElementById("quoteChange").textContent =
-                    prefix + percent.toFixed(2).replace(".", ",") + "%";
+                    formatPercent(data.percentChange);
 
                 document.getElementById("quoteChange").style.color =
-                    percent > 0 ? "#22c55e" : percent < 0 ? "#ef4444" : "#8f8f8f";
+                    getChangeColor(data.percentChange);
 
                 message.textContent =
                     "Quelle: " + data.source + (data.datetime ? " · " + data.datetime : "");
@@ -839,18 +1034,20 @@
         };
 
         document.getElementById("searchButton").onclick = function () {
-            scrollToSection("marketSection", "navSearch");
+            scrollToSection("searchSection", "navSearch");
             document.getElementById("symbolInput").focus();
         };
 
         document.getElementById("openSearchButton").onclick = function () {
-            scrollToSection("marketSection", "navSearch");
+            scrollToSection("searchSection", "navSearch");
             document.getElementById("symbolInput").focus();
         };
 
         document.getElementById("editWatchlistButton").onclick = function () {
             comingSoon("Watchlist");
         };
+
+        document.getElementById("refreshMarketsButton").onclick = loadMarketOverview;
 
         document.getElementById("loadQuoteButton").onclick = loadQuote;
 
@@ -870,7 +1067,7 @@
         };
 
         document.getElementById("navSearch").onclick = function () {
-            scrollToSection("marketSection", "navSearch");
+            scrollToSection("searchSection", "navSearch");
         };
 
         document.getElementById("navPortfolio").onclick = function () {
@@ -885,7 +1082,13 @@
             scrollToSection("accountSection", "navProfile");
         };
 
-        startSite();
+        if (startSite()) {
+            loadMarketOverview();
+
+            setInterval(function () {
+                loadMarketOverview();
+            }, 60000);
+        }
     </script>
 
 </body>
