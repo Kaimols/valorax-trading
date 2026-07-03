@@ -14,30 +14,31 @@
 
         body {
             min-height: 100vh;
-            background: #050505;
-            color: white;
+            background: #000;
+            color: #fff;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
 
         #app {
-            width: min(520px, 100%);
+            width: min(480px, 100%);
             min-height: 100vh;
             margin: 0 auto;
-            padding: 22px 18px 96px;
-            background: #050505;
+            background: #000;
+            padding: 18px 18px 92px;
         }
 
         #topbar {
+            height: 48px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 34px;
+            margin-bottom: 24px;
         }
 
         #logo {
-            font-size: 24px;
+            font-size: 23px;
             font-weight: 760;
-            letter-spacing: -0.7px;
+            letter-spacing: -0.8px;
         }
 
         #logo span {
@@ -45,22 +46,26 @@
         }
 
         #profileButton {
-            width: 42px;
-            height: 42px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             border: none;
-            background: #171717;
-            color: white;
-            font-size: 15px;
+            background: #151515;
+            color: #fff;
+            font-size: 14px;
             font-weight: 750;
             cursor: pointer;
         }
 
-        #portfolioHeader {
-            margin-bottom: 28px;
+        .screen {
+            display: none;
         }
 
-        #smallLabel {
+        .screen.active {
+            display: block;
+        }
+
+        #portfolioLabel {
             color: #8f8f8f;
             font-size: 14px;
             margin-bottom: 8px;
@@ -68,97 +73,92 @@
 
         #portfolioValue {
             font-size: 48px;
+            line-height: 1;
             font-weight: 760;
             letter-spacing: -2px;
-            line-height: 1;
         }
 
         #portfolioChange {
+            margin-top: 10px;
             color: #8f8f8f;
             font-size: 15px;
-            margin-top: 10px;
         }
 
-        #chartBox {
-            height: 170px;
-            margin: 28px 0;
-            border-radius: 24px;
-            background: #090909;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        #chartArea {
+            margin-top: 26px;
+            margin-bottom: 18px;
+            height: 190px;
             position: relative;
+        }
+
+        #chartCanvas {
+            width: 100%;
+            height: 140px;
+            border-radius: 18px;
             overflow: hidden;
-            color: #8f8f8f;
-            text-align: center;
-            padding: 22px;
-        }
-
-        #chartBox::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background:
-                linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.025) 1px, transparent 1px);
-            background-size: 42px 42px;
-            opacity: 0.55;
-        }
-
-        #chartText {
             position: relative;
-            z-index: 1;
-            font-size: 14px;
-            line-height: 1.5;
-            max-width: 300px;
         }
 
-        #quickActions {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 26px;
+        #chartCanvas svg {
+            width: 100%;
+            height: 100%;
         }
 
-        #quickActions button {
-            height: 72px;
-            border-radius: 20px;
-            border: none;
-            background: #151515;
-            color: white;
-            cursor: pointer;
+        #chartCanvas path {
+            fill: none;
+            stroke: #22c55e;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        #chartEmptyText {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 50px;
+            color: #777;
             font-size: 13px;
-            font-weight: 650;
-            transition: 0.2s;
+            text-align: center;
         }
 
-        #quickActions button:hover {
-            background: #1d1d1d;
-            transform: translateY(-2px);
+        #rangeTabs {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-top: 12px;
         }
 
-        #quickActions span {
-            display: block;
-            font-size: 22px;
-            margin-bottom: 5px;
-            color: #22c55e;
+        #rangeTabs button {
+            height: 34px;
+            border-radius: 999px;
+            border: none;
+            background: transparent;
+            color: #777;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        #rangeTabs button.active {
+            background: #1a1a1a;
+            color: #fff;
         }
 
         .section {
-            margin-top: 30px;
+            margin-top: 28px;
         }
 
         .sectionHeader {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         .sectionHeader h2 {
             font-size: 22px;
-            font-weight: 750;
+            font-weight: 760;
             letter-spacing: -0.5px;
         }
 
@@ -167,34 +167,36 @@
             background: transparent;
             color: #22c55e;
             font-size: 14px;
-            font-weight: 700;
+            font-weight: 740;
             cursor: pointer;
         }
 
         .card {
-            border-radius: 24px;
-            background: #111111;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            padding: 20px;
+            background: #101010;
+            border-radius: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            overflow: hidden;
         }
 
         #cashCard {
+            padding: 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 14px;
         }
 
-        #cashCard div span {
+        #cashCard span {
             display: block;
             color: #8f8f8f;
             font-size: 14px;
             margin-bottom: 6px;
         }
 
-        #cashCard div strong {
-            font-size: 26px;
-            letter-spacing: -0.8px;
+        #cashValue {
+            font-size: 25px;
+            font-weight: 760;
+            letter-spacing: -0.7px;
         }
 
         #cashCard button {
@@ -204,46 +206,62 @@
             border: none;
             background: #22c55e;
             color: #000;
-            font-weight: 800;
+            font-size: 14px;
+            font-weight: 820;
             cursor: pointer;
         }
 
         #marketOverview {
             padding: 0;
-            overflow: hidden;
         }
 
-        #marketRows {
+        #marketRows,
+        #searchPopularRows {
             display: flex;
             flex-direction: column;
         }
 
         .marketRow {
+            min-height: 68px;
             display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 14px;
-            padding: 18px 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            grid-template-columns: 42px 1fr auto;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.065);
             cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .marketRow:hover {
-            background: #151515;
+            transition: 0.18s;
         }
 
         .marketRow:last-child {
             border-bottom: none;
         }
 
-        .marketLeft {
+        .marketRow:hover {
+            background: #171717;
+        }
+
+        .marketIcon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #191919;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #22c55e;
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+        .marketMain {
             min-width: 0;
         }
 
         .marketSymbol {
             display: block;
-            color: white;
-            font-size: 17px;
+            color: #fff;
+            font-size: 16px;
             font-weight: 760;
         }
 
@@ -251,51 +269,74 @@
             display: block;
             color: #8f8f8f;
             font-size: 13px;
-            margin-top: 4px;
+            margin-top: 3px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .marketRight {
+        .marketSide {
             text-align: right;
         }
 
         .marketPrice {
             display: block;
-            color: white;
-            font-size: 17px;
+            color: #fff;
+            font-size: 16px;
             font-weight: 760;
         }
 
         .marketChange {
             display: block;
             font-size: 13px;
-            margin-top: 4px;
+            margin-top: 3px;
         }
 
         #marketStatus {
             color: #8f8f8f;
             font-size: 13px;
-            padding: 14px 20px 18px;
+            padding: 14px 16px 16px;
             line-height: 1.5;
         }
 
-        #marketSearchCard {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+        #quickLine {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
         }
 
-        #marketHint {
-            color: #8f8f8f;
-            font-size: 14px;
-            line-height: 1.5;
+        #quickLine button {
+            height: 54px;
+            border-radius: 16px;
+            border: none;
+            background: #111;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
         }
 
-        #marketSearchBox {
+        #quickLine button span {
+            display: block;
+            color: #22c55e;
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+
+        #searchTitle,
+        #depotTitle,
+        #accountTitle {
+            font-size: 34px;
+            font-weight: 760;
+            letter-spacing: -1.2px;
+            margin-bottom: 22px;
+        }
+
+        #searchBox {
             display: flex;
             gap: 10px;
+            margin-bottom: 18px;
         }
 
         #symbolInput {
@@ -303,8 +344,8 @@
             height: 52px;
             border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            background: #050505;
-            color: white;
+            background: #101010;
+            color: #fff;
             padding: 0 15px;
             font-size: 16px;
             outline: none;
@@ -315,32 +356,29 @@
         }
 
         #loadQuoteButton {
-            width: 108px;
+            width: 96px;
             height: 52px;
             border-radius: 16px;
             border: none;
             background: #22c55e;
             color: #000;
             font-size: 15px;
-            font-weight: 800;
+            font-weight: 820;
             cursor: pointer;
         }
 
         #quoteResult {
             display: none;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            padding: 18px;
-            border-radius: 20px;
-            background: #050505;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            margin-bottom: 24px;
         }
 
-        #quoteResult div {
+        #quoteTop {
             display: flex;
-            flex-direction: column;
-            gap: 5px;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px;
         }
 
         #quoteName {
@@ -349,57 +387,103 @@
         }
 
         #quoteSymbol {
-            font-size: 22px;
+            display: block;
+            font-size: 24px;
+            margin-top: 4px;
+            font-weight: 780;
         }
 
         #quotePrice {
-            font-size: 24px;
+            display: block;
+            font-size: 28px;
+            font-weight: 780;
             text-align: right;
         }
 
         #quoteChange {
-            color: #8f8f8f;
+            display: block;
             font-size: 14px;
+            margin-top: 4px;
             text-align: right;
+        }
+
+        #quoteActionRow {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        #quoteActionRow button {
+            height: 48px;
+            border-radius: 16px;
+            border: none;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        #buyButton {
+            background: #22c55e;
+            color: #000;
+        }
+
+        #watchButton {
+            background: #191919;
+            color: #fff;
         }
 
         #quoteMessage {
             color: #8f8f8f;
             font-size: 13px;
-            min-height: 18px;
             line-height: 1.5;
+            min-height: 20px;
+            margin-bottom: 18px;
         }
 
-        #emptyDepot,
-        #emptyWatchlist {
+        #depotSummary {
+            padding: 20px;
+            margin-bottom: 22px;
+        }
+
+        #depotSummary span {
+            color: #8f8f8f;
+            font-size: 14px;
+        }
+
+        #depotSummary strong {
+            display: block;
+            font-size: 34px;
+            font-weight: 760;
+            letter-spacing: -1px;
+            margin-top: 7px;
+        }
+
+        .emptyState {
             text-align: center;
-            padding: 34px 22px;
+            padding: 36px 24px;
             color: #8f8f8f;
         }
 
-        #emptyDepotIcon,
-        #emptyWatchlistIcon {
+        .emptyIcon {
             width: 58px;
             height: 58px;
             margin: 0 auto 16px;
-            border-radius: 20px;
-            background: rgba(34, 197, 94, 0.12);
+            border-radius: 50%;
+            background: #191919;
             color: #22c55e;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
+            font-size: 26px;
         }
 
-        #emptyDepot h3,
-        #emptyWatchlist h3 {
-            color: white;
+        .emptyState h3 {
+            color: #fff;
             font-size: 20px;
             margin-bottom: 8px;
         }
 
-        #emptyDepot p,
-        #emptyWatchlist p {
+        .emptyState p {
             font-size: 14px;
             line-height: 1.5;
         }
@@ -412,9 +496,9 @@
 
         .statCard {
             padding: 18px;
-            border-radius: 22px;
-            background: #111111;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            background: #101010;
+            border: 1px solid rgba(255, 255, 255, 0.07);
         }
 
         .statCard span {
@@ -428,26 +512,30 @@
             margin-top: 8px;
         }
 
+        #accountCard {
+            padding: 20px;
+        }
+
         #userInfo {
             color: #8f8f8f;
-            line-height: 1.6;
+            line-height: 1.7;
             font-size: 14px;
         }
 
         #userInfo strong {
-            color: white;
+            color: #fff;
         }
 
         #logoutButton {
-            margin-top: 16px;
+            margin-top: 18px;
             width: 100%;
             height: 52px;
-            border-radius: 18px;
+            border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.12);
             background: transparent;
-            color: white;
+            color: #fff;
             font-size: 15px;
-            font-weight: 750;
+            font-weight: 760;
             cursor: pointer;
         }
 
@@ -461,14 +549,14 @@
             left: 50%;
             bottom: 0;
             transform: translateX(-50%);
-            width: min(520px, 100%);
+            width: min(480px, 100%);
             height: 76px;
-            background: rgba(5, 5, 5, 0.92);
+            background: rgba(0, 0, 0, 0.93);
             backdrop-filter: blur(18px);
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1px solid rgba(255, 255, 255, 0.075);
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            z-index: 10;
+            z-index: 50;
         }
 
         #bottomNav button {
@@ -476,7 +564,7 @@
             background: transparent;
             color: #777;
             font-size: 12px;
-            font-weight: 650;
+            font-weight: 700;
             cursor: pointer;
         }
 
@@ -487,27 +575,32 @@
         }
 
         #bottomNav button.active {
-            color: white;
+            color: #fff;
         }
 
-        @media (max-width: 480px) {
-            #marketSearchBox {
+        @media (max-width: 420px) {
+            #app {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            #portfolioValue {
+                font-size: 44px;
+            }
+
+            #searchBox {
                 flex-direction: column;
             }
 
             #loadQuoteButton {
                 width: 100%;
             }
-
-            #portfolioValue {
-                font-size: 44px;
-            }
         }
 
         @media (min-width: 900px) {
             body {
                 background:
-                    radial-gradient(circle at top, rgba(34, 197, 94, 0.12), transparent 34%),
+                    radial-gradient(circle at top, rgba(34, 197, 94, 0.10), transparent 34%),
                     #000;
             }
 
@@ -517,15 +610,16 @@
                 min-height: calc(100vh - 56px);
                 border-radius: 34px;
                 border: 1px solid rgba(255, 255, 255, 0.08);
-                box-shadow: 0 0 70px rgba(0, 0, 0, 0.8);
+                box-shadow: 0 0 70px rgba(0, 0, 0, 0.85);
             }
 
             #bottomNav {
-                border-radius: 28px 28px 0 0;
+                border-radius: 26px 26px 0 0;
             }
         }
     </style>
 </head>
+
 <body>
 
     <main id="app">
@@ -535,78 +629,102 @@
             <button id="profileButton">VX</button>
         </header>
 
-        <section id="portfolioHeader">
-            <div id="smallLabel">Portfolio</div>
-            <div id="portfolioValue">0,00 €</div>
-            <div id="portfolioChange">0,00 € · 0,00 % heute</div>
-        </section>
+        <section id="homeScreen" class="screen active">
 
-        <section id="chartBox">
-            <div id="chartText">
-                Noch keine Portfolio-Entwicklung vorhanden. Sobald du Positionen hast, wird hier dein Verlauf angezeigt.
-            </div>
-        </section>
+            <section id="portfolioHeader">
+                <div id="portfolioLabel">Portfolio</div>
+                <div id="portfolioValue">0,00 €</div>
+                <div id="portfolioChange">0,00 € · 0,00 % heute</div>
+            </section>
 
-        <section id="quickActions">
-            <button id="depositButton">
-                <span>＋</span>
-                Guthaben
-            </button>
-
-            <button id="searchButton">
-                <span>⌕</span>
-                Suchen
-            </button>
-
-            <button id="orderButton">
-                <span>↗</span>
-                Order
-            </button>
-        </section>
-
-        <section class="section">
-            <div class="sectionHeader">
-                <h2>Cash</h2>
-            </div>
-
-            <div id="cashCard" class="card">
-                <div>
-                    <span>Verfügbares Guthaben</span>
-                    <strong id="cashValue">0,00 €</strong>
+            <section id="chartArea">
+                <div id="chartCanvas">
+                    <svg viewBox="0 0 420 140" preserveAspectRatio="none">
+                        <path d="M10 92 C70 92, 92 92, 140 92 S235 92, 275 92 S350 92, 410 92"></path>
+                    </svg>
+                    <div id="chartEmptyText">Keine Portfolio-Entwicklung vorhanden</div>
                 </div>
 
-                <button id="addCashButton">Hinzufügen</button>
-            </div>
-        </section>
+                <div id="rangeTabs">
+                    <button>1T</button>
+                    <button>1W</button>
+                    <button class="active">1M</button>
+                    <button>1J</button>
+                    <button>Max</button>
+                </div>
+            </section>
 
-        <section class="section" id="marketSection">
-            <div class="sectionHeader">
-                <h2>Märkte</h2>
-                <button id="refreshMarketsButton">Aktualisieren</button>
-            </div>
-
-            <div id="marketOverview" class="card">
-                <div id="marketRows"></div>
-                <p id="marketStatus">Kurse werden geladen...</p>
-            </div>
-        </section>
-
-        <section class="section" id="searchSection">
-            <div class="sectionHeader">
-                <h2>Suche</h2>
-            </div>
-
-            <div id="marketSearchCard" class="card">
-                <p id="marketHint">
-                    Suche nach echten Marktdaten, z. B. <strong>AAPL</strong>, <strong>TSLA</strong>, <strong>MSFT</strong> oder <strong>BTC/USD</strong>.
-                </p>
-
-                <div id="marketSearchBox">
-                    <input id="symbolInput" type="text" placeholder="Symbol eingeben">
-                    <button id="loadQuoteButton">Laden</button>
+            <section class="section">
+                <div class="sectionHeader">
+                    <h2>Cash</h2>
                 </div>
 
-                <div id="quoteResult">
+                <div id="cashCard" class="card">
+                    <div>
+                        <span>Verfügbar</span>
+                        <strong id="cashValue">0,00 €</strong>
+                    </div>
+
+                    <button id="addCashButton">Hinzufügen</button>
+                </div>
+            </section>
+
+            <div id="quickLine">
+                <button id="depositButton">
+                    <span>＋</span>
+                    Guthaben
+                </button>
+
+                <button id="searchShortcutButton">
+                    <span>⌕</span>
+                    Suchen
+                </button>
+
+                <button id="orderButton">
+                    <span>↗</span>
+                    Order
+                </button>
+            </div>
+
+            <section class="section">
+                <div class="sectionHeader">
+                    <h2>Märkte</h2>
+                    <button id="refreshMarketsButton">Aktualisieren</button>
+                </div>
+
+                <div id="marketOverview" class="card">
+                    <div id="marketRows"></div>
+                    <p id="marketStatus">Kurse werden geladen...</p>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="sectionHeader">
+                    <h2>Watchlist</h2>
+                    <button id="editWatchlistButton">Bearbeiten</button>
+                </div>
+
+                <div class="card emptyState">
+                    <div class="emptyIcon">☆</div>
+                    <h3>Keine Werte beobachtet</h3>
+                    <p>Füge Werte über die Suche hinzu. Es werden keine Fake-Kurse angezeigt.</p>
+                </div>
+            </section>
+
+        </section>
+
+        <section id="searchScreen" class="screen">
+            <h1 id="searchTitle">Suche</h1>
+
+            <div id="searchBox">
+                <input id="symbolInput" type="text" placeholder="Aktie, ETF oder Krypto suchen">
+                <button id="loadQuoteButton">Suchen</button>
+            </div>
+
+            <p id="quoteMessage">Suche nach einem Symbol, z. B. AAPL, TSLA, MSFT oder BTC/USD.</p>
+
+            <div id="quoteResult" class="card">
+                <div id="quoteTop">
                     <div>
                         <span id="quoteName">Kein Wert geladen</span>
                         <strong id="quoteSymbol">-</strong>
@@ -618,70 +736,70 @@
                     </div>
                 </div>
 
-                <p id="quoteMessage">Noch kein Kurs geladen.</p>
+                <div id="quoteActionRow">
+                    <button id="buyButton">Kaufen</button>
+                    <button id="watchButton">Beobachten</button>
+                </div>
             </div>
+
+            <section class="section">
+                <div class="sectionHeader">
+                    <h2>Beliebte Werte</h2>
+                </div>
+
+                <div class="card">
+                    <div id="searchPopularRows"></div>
+                </div>
+            </section>
         </section>
 
-        <section class="section" id="depotSection">
-            <div class="sectionHeader">
-                <h2>Depot</h2>
-                <button id="openSearchButton">Wert suchen</button>
+        <section id="depotScreen" class="screen">
+            <h1 id="depotTitle">Depot</h1>
+
+            <div id="depotSummary" class="card">
+                <span>Depotwert</span>
+                <strong>0,00 €</strong>
             </div>
 
-            <div id="emptyDepot" class="card">
-                <div id="emptyDepotIcon">↗</div>
+            <div class="card emptyState">
+                <div class="emptyIcon">↗</div>
                 <h3>Noch keine Positionen</h3>
-                <p>Du hast noch keine Aktien, ETFs oder Krypto-Positionen in deinem Paper-Trading-Depot.</p>
+                <p>Du hast aktuell keine Aktien, ETFs oder Krypto-Positionen in deinem Paper-Trading-Depot.</p>
             </div>
+
+            <section class="section">
+                <div class="sectionHeader">
+                    <h2>Übersicht</h2>
+                </div>
+
+                <div id="statsGrid">
+                    <div class="statCard">
+                        <span>Investiert</span>
+                        <strong>0,00 €</strong>
+                    </div>
+
+                    <div class="statCard">
+                        <span>Rendite</span>
+                        <strong>0,00 %</strong>
+                    </div>
+
+                    <div class="statCard">
+                        <span>Positionen</span>
+                        <strong>0</strong>
+                    </div>
+
+                    <div class="statCard">
+                        <span>Orders</span>
+                        <strong>0</strong>
+                    </div>
+                </div>
+            </section>
         </section>
 
-        <section class="section">
-            <div class="sectionHeader">
-                <h2>Übersicht</h2>
-            </div>
+        <section id="accountScreen" class="screen">
+            <h1 id="accountTitle">Konto</h1>
 
-            <div id="statsGrid">
-                <div class="statCard">
-                    <span>Investiert</span>
-                    <strong>0,00 €</strong>
-                </div>
-
-                <div class="statCard">
-                    <span>Rendite</span>
-                    <strong>0,00 %</strong>
-                </div>
-
-                <div class="statCard">
-                    <span>Positionen</span>
-                    <strong>0</strong>
-                </div>
-
-                <div class="statCard">
-                    <span>Orders</span>
-                    <strong>0</strong>
-                </div>
-            </div>
-        </section>
-
-        <section class="section">
-            <div class="sectionHeader">
-                <h2>Watchlist</h2>
-                <button id="editWatchlistButton">Bearbeiten</button>
-            </div>
-
-            <div id="emptyWatchlist" class="card">
-                <div id="emptyWatchlistIcon">☆</div>
-                <h3>Keine Watchlist</h3>
-                <p>Füge später Werte hinzu, die du beobachten möchtest. Es werden keine Fake-Kurse angezeigt.</p>
-            </div>
-        </section>
-
-        <section class="section" id="accountSection">
-            <div class="sectionHeader">
-                <h2>Konto</h2>
-            </div>
-
-            <div class="card">
+            <div id="accountCard" class="card">
                 <p id="userInfo"></p>
                 <button id="logoutButton">Ausloggen</button>
             </div>
@@ -700,12 +818,12 @@
             Suche
         </button>
 
-        <button id="navPortfolio">
+        <button id="navDepot">
             <span>▦</span>
             Depot
         </button>
 
-        <button id="navProfile">
+        <button id="navAccount">
             <span>◦</span>
             Konto
         </button>
@@ -720,6 +838,8 @@
             "AMZN",
             "BTC/USD"
         ];
+
+        let lastMarketQuotes = [];
 
         function readStorage(key, fallback) {
             try {
@@ -801,27 +921,35 @@
             return "#8f8f8f";
         }
 
-        function setActiveNav(buttonId) {
+        function getIconText(symbol) {
+            return String(symbol || "?")
+                .replace("/", "")
+                .slice(0, 2)
+                .toUpperCase();
+        }
+
+        function setActiveNav(navId) {
             const buttons = document.querySelectorAll("#bottomNav button");
 
             buttons.forEach(function (button) {
                 button.classList.remove("active");
             });
 
-            document.getElementById(buttonId).classList.add("active");
+            document.getElementById(navId).classList.add("active");
         }
 
-        function scrollToSection(sectionId, navId) {
-            const section = document.getElementById(sectionId);
+        function showScreen(screenId, navId) {
+            const screens = document.querySelectorAll(".screen");
 
-            if (!section) {
-                return;
-            }
+            screens.forEach(function (screen) {
+                screen.classList.remove("active");
+            });
 
+            document.getElementById(screenId).classList.add("active");
             setActiveNav(navId);
 
             window.scrollTo({
-                top: section.offsetTop - 18,
+                top: 0,
                 behavior: "smooth"
             });
         }
@@ -884,53 +1012,66 @@
             return true;
         }
 
+        function createMarketRow(quote) {
+            const row = document.createElement("div");
+            row.className = "marketRow";
+
+            const icon = document.createElement("div");
+            icon.className = "marketIcon";
+            icon.textContent = getIconText(quote.symbol);
+
+            const main = document.createElement("div");
+            main.className = "marketMain";
+
+            const symbol = document.createElement("span");
+            symbol.className = "marketSymbol";
+            symbol.textContent = quote.symbol;
+
+            const name = document.createElement("span");
+            name.className = "marketName";
+            name.textContent = quote.name || quote.exchange || "Marktdaten";
+
+            main.appendChild(symbol);
+            main.appendChild(name);
+
+            const side = document.createElement("div");
+            side.className = "marketSide";
+
+            const price = document.createElement("span");
+            price.className = "marketPrice";
+            price.textContent = formatQuotePrice(quote.price, quote.currency);
+
+            const change = document.createElement("span");
+            change.className = "marketChange";
+            change.textContent = formatPercent(quote.percentChange);
+            change.style.color = getChangeColor(quote.percentChange);
+
+            side.appendChild(price);
+            side.appendChild(change);
+
+            row.appendChild(icon);
+            row.appendChild(main);
+            row.appendChild(side);
+
+            row.onclick = function () {
+                document.getElementById("symbolInput").value = quote.symbol;
+                showScreen("searchScreen", "navSearch");
+                loadQuote();
+            };
+
+            return row;
+        }
+
         function renderMarketRows(quotes) {
-            const container = document.getElementById("marketRows");
-            container.innerHTML = "";
+            const marketContainer = document.getElementById("marketRows");
+            const popularContainer = document.getElementById("searchPopularRows");
+
+            marketContainer.innerHTML = "";
+            popularContainer.innerHTML = "";
 
             quotes.forEach(function (quote) {
-                const row = document.createElement("div");
-                row.className = "marketRow";
-
-                const left = document.createElement("div");
-                left.className = "marketLeft";
-
-                const symbol = document.createElement("span");
-                symbol.className = "marketSymbol";
-                symbol.textContent = quote.symbol;
-
-                const name = document.createElement("span");
-                name.className = "marketName";
-                name.textContent = quote.name || quote.exchange || "Marktdaten";
-
-                left.appendChild(symbol);
-                left.appendChild(name);
-
-                const right = document.createElement("div");
-                right.className = "marketRight";
-
-                const price = document.createElement("span");
-                price.className = "marketPrice";
-                price.textContent = formatQuotePrice(quote.price, quote.currency);
-
-                const change = document.createElement("span");
-                change.className = "marketChange";
-                change.textContent = formatPercent(quote.percentChange);
-                change.style.color = getChangeColor(quote.percentChange);
-
-                right.appendChild(price);
-                right.appendChild(change);
-
-                row.appendChild(left);
-                row.appendChild(right);
-
-                row.onclick = function () {
-                    scrollToSection("searchSection", "navSearch");
-                    document.getElementById("symbolInput").value = quote.symbol;
-                    loadQuote();
-                };
-
-                container.appendChild(row);
+                marketContainer.appendChild(createMarketRow(quote));
+                popularContainer.appendChild(createMarketRow(quote));
             });
         }
 
@@ -956,7 +1097,8 @@
                     return;
                 }
 
-                renderMarketRows(data.quotes);
+                lastMarketQuotes = data.quotes;
+                renderMarketRows(lastMarketQuotes);
 
                 status.textContent =
                     "Quelle: " + (data.source || "Marktdaten") + " · automatische Aktualisierung aktiv";
@@ -1006,7 +1148,7 @@
                 message.textContent =
                     "Quelle: " + data.source + (data.datetime ? " · " + data.datetime : "");
 
-                result.style.display = "flex";
+                result.style.display = "block";
             } catch (error) {
                 message.textContent = "Fehler beim Laden der Marktdaten. Prüfe, ob /api/quote eingerichtet ist.";
             }
@@ -1016,9 +1158,30 @@
             alert(text + " bauen wir als Nächstes.");
         }
 
-        document.getElementById("logoutButton").onclick = function () {
-            localStorage.removeItem("valorax_current_user");
-            window.location.href = "index.html";
+        document.getElementById("navHome").onclick = function () {
+            showScreen("homeScreen", "navHome");
+        };
+
+        document.getElementById("navSearch").onclick = function () {
+            showScreen("searchScreen", "navSearch");
+            document.getElementById("symbolInput").focus();
+        };
+
+        document.getElementById("navDepot").onclick = function () {
+            showScreen("depotScreen", "navDepot");
+        };
+
+        document.getElementById("navAccount").onclick = function () {
+            showScreen("accountScreen", "navAccount");
+        };
+
+        document.getElementById("profileButton").onclick = function () {
+            showScreen("accountScreen", "navAccount");
+        };
+
+        document.getElementById("searchShortcutButton").onclick = function () {
+            showScreen("searchScreen", "navSearch");
+            document.getElementById("symbolInput").focus();
         };
 
         document.getElementById("depositButton").onclick = function () {
@@ -1033,17 +1196,15 @@
             comingSoon("Order-Funktion");
         };
 
-        document.getElementById("searchButton").onclick = function () {
-            scrollToSection("searchSection", "navSearch");
-            document.getElementById("symbolInput").focus();
-        };
-
-        document.getElementById("openSearchButton").onclick = function () {
-            scrollToSection("searchSection", "navSearch");
-            document.getElementById("symbolInput").focus();
-        };
-
         document.getElementById("editWatchlistButton").onclick = function () {
+            comingSoon("Watchlist");
+        };
+
+        document.getElementById("buyButton").onclick = function () {
+            comingSoon("Kaufen");
+        };
+
+        document.getElementById("watchButton").onclick = function () {
             comingSoon("Watchlist");
         };
 
@@ -1057,29 +1218,9 @@
             }
         });
 
-        document.getElementById("navHome").onclick = function () {
-            setActiveNav("navHome");
-
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-        };
-
-        document.getElementById("navSearch").onclick = function () {
-            scrollToSection("searchSection", "navSearch");
-        };
-
-        document.getElementById("navPortfolio").onclick = function () {
-            scrollToSection("depotSection", "navPortfolio");
-        };
-
-        document.getElementById("navProfile").onclick = function () {
-            scrollToSection("accountSection", "navProfile");
-        };
-
-        document.getElementById("profileButton").onclick = function () {
-            scrollToSection("accountSection", "navProfile");
+        document.getElementById("logoutButton").onclick = function () {
+            localStorage.removeItem("valorax_current_user");
+            window.location.href = "index.html";
         };
 
         if (startSite()) {
