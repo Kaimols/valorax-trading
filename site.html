@@ -349,6 +349,7 @@
             padding: 0 15px;
             font-size: 16px;
             outline: none;
+            text-transform: uppercase;
         }
 
         #symbolInput:focus {
@@ -717,11 +718,11 @@
             <h1 id="searchTitle">Suche</h1>
 
             <div id="searchBox">
-                <input id="symbolInput" type="text" placeholder="Aktie, ETF oder Krypto suchen">
+                <input id="symbolInput" type="text" placeholder="Deutschen Wert suchen">
                 <button id="loadQuoteButton">Suchen</button>
             </div>
 
-            <p id="quoteMessage">Suche nach einem Symbol, z. B. AAPL, TSLA, MSFT oder BTC/USD.</p>
+            <p id="quoteMessage">Suche nach einem deutschen Wert, z. B. SAP, BMW, SIE, ALV oder DTE.</p>
 
             <div id="quoteResult" class="card">
                 <div id="quoteTop">
@@ -731,7 +732,7 @@
                     </div>
 
                     <div>
-                        <strong id="quotePrice">0,00</strong>
+                        <strong id="quotePrice">0,00 €</strong>
                         <span id="quoteChange">0,00 %</span>
                     </div>
                 </div>
@@ -764,7 +765,7 @@
             <div class="card emptyState">
                 <div class="emptyIcon">↗</div>
                 <h3>Noch keine Positionen</h3>
-                <p>Du hast aktuell keine Aktien, ETFs oder Krypto-Positionen in deinem Paper-Trading-Depot.</p>
+                <p>Du hast aktuell keine Aktien oder ETFs in deinem Paper-Trading-Depot.</p>
             </div>
 
             <section class="section">
@@ -831,12 +832,14 @@
 
     <script>
         const defaultMarketSymbols = [
-            "AAPL",
-            "MSFT",
-            "TSLA",
-            "NVDA",
-            "AMZN",
-            "BTC/USD"
+            "SAP",
+            "SIE",
+            "BMW",
+            "ALV",
+            "DTE",
+            "ADS",
+            "MBG",
+            "VOW3"
         ];
 
         let lastMarketQuotes = [];
@@ -877,27 +880,11 @@
             });
         }
 
-        function formatQuotePrice(value, currency) {
-            const number = Number(value || 0);
-
-            if (currency === "EUR") {
-                return number.toLocaleString("de-DE", {
-                    style: "currency",
-                    currency: "EUR"
-                });
-            }
-
-            if (currency === "USD") {
-                return number.toLocaleString("de-DE", {
-                    style: "currency",
-                    currency: "USD"
-                });
-            }
-
-            return number.toLocaleString("de-DE", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }) + " " + currency;
+        function formatQuotePrice(value) {
+            return Number(value || 0).toLocaleString("de-DE", {
+                style: "currency",
+                currency: "EUR"
+            });
         }
 
         function formatPercent(value) {
@@ -923,9 +910,20 @@
 
         function getIconText(symbol) {
             return String(symbol || "?")
-                .replace("/", "")
+                .replace(".DE", "")
                 .slice(0, 2)
                 .toUpperCase();
+        }
+
+        function normalizeGermanSymbol(value) {
+            return String(value || "")
+                .trim()
+                .toUpperCase()
+                .replace(".DE", "");
+        }
+
+        function isValidGermanSymbol(symbol) {
+            return /^[A-Z0-9]{1,8}$/.test(symbol);
         }
 
         function setActiveNav(navId) {
@@ -1039,7 +1037,7 @@
 
             const price = document.createElement("span");
             price.className = "marketPrice";
-            price.textContent = formatQuotePrice(quote.price, quote.currency);
+            price.textContent = formatQuotePrice(quote.price);
 
             const change = document.createElement("span");
             change.className = "marketChange";
@@ -1112,13 +1110,20 @@
             const message = document.getElementById("quoteMessage");
             const result = document.getElementById("quoteResult");
 
-            const symbol = input.value.trim().toUpperCase();
+            const symbol = normalizeGermanSymbol(input.value);
 
             if (!symbol) {
                 message.textContent = "Bitte gib ein Symbol ein.";
                 return;
             }
 
+            if (!isValidGermanSymbol(symbol)) {
+                message.textContent = "Bitte nutze ein deutsches Symbol, z. B. SAP, BMW, SIE, ALV oder DTE.";
+                result.style.display = "none";
+                return;
+            }
+
+            input.value = symbol;
             message.textContent = "Kurs wird geladen...";
             result.style.display = "none";
 
@@ -1137,7 +1142,7 @@
                 document.getElementById("quoteSymbol").textContent = data.symbol;
 
                 document.getElementById("quotePrice").textContent =
-                    formatQuotePrice(data.price, data.currency);
+                    formatQuotePrice(data.price);
 
                 document.getElementById("quoteChange").textContent =
                     formatPercent(data.percentChange);

@@ -1,3 +1,61 @@
+const symbolNames = {
+    SAP: "SAP",
+    SIE: "Siemens",
+    BMW: "BMW",
+    ALV: "Allianz",
+    DTE: "Deutsche Telekom",
+    ADS: "Adidas",
+    MBG: "Mercedes-Benz Group",
+    VOW3: "Volkswagen Vz."
+};
+
+function toProviderSymbol(inputSymbol) {
+    const cleanSymbol = String(inputSymbol || "")
+        .trim()
+        .toUpperCase()
+        .replace(".DE", "");
+
+    return cleanSymbol + ".DE";
+}
+
+function toDisplaySymbol(providerSymbol) {
+    return String(providerSymbol || "")
+        .toUpperCase()
+        .replace(".DE", "");
+}
+
+function isValidGermanSymbol(symbol) {
+    return /^[A-Z0-9]{1,8}$/.test(symbol);
+}
+
+async function loadQuote(symbol, apiKey) {
+    const providerSymbol = toProviderSymbol(symbol);
+    const displaySymbol = toDisplaySymbol(providerSymbol);
+
+    const apiUrl = new URL("https://finnhub.io/api/v1/quote");
+    apiUrl.searchParams.set("symbol", providerSymbol);
+    apiUrl.searchParams.set("token", apiKey);
+
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+
+    if (!response.ok || data.error || !Number(data.c || 0)) {
+        return null;
+    }
+
+    return {
+        symbol: displaySymbol,
+        providerSymbol: providerSymbol,
+        name: symbolNames[displaySymbol] || displaySymbol,
+        currency: "EUR",
+        price: Number(data.c || 0),
+        previousClose: Number(data.pc || 0),
+        change: Number(data.d || 0),
+        percentChange: Number(data.dp || 0),
+        source: "Finnhub"
+    };
+}
+
 export async function GET(request) {
     const url = new URL(request.url);
 
@@ -15,97 +73,46 @@ export async function GET(request) {
     const symbols = symbolsParam
         .split(",")
         .map(function (symbol) {
-            return symbol.trim();
+            return symbol.trim().replace(".DE", "");
         })
         .filter(Boolean)
         .slice(0, 12);
 
-    if (symbols.length === 0) {
-        return Response.json(
-            { error: "Keine gültigen Symbole gefunden." },
-            { status: 400 }
-        );
-    }
-
     const invalidSymbol = symbols.find(function (symbol) {
-        return !/^[A-Z0-9./:-]{1,20}$/.test(symbol);
+        return !isValidGermanSymbol(symbol);
     });
 
     if (invalidSymbol) {
         return Response.json(
-            { error: "Ungültiges Symbol: " + invalidSymbol },
+            { error: "Ungültiges EUR-Symbol: " + invalidSymbol },
             { status: 400 }
         );
     }
 
-    const apiKey = process.env.TWELVE_DATA_API_KEY;
+    const apiKey = process.env.FINNHUB_API_KEY;
 
     if (!apiKey) {
         return Response.json(
-            { error: "API-Key ist nicht gesetzt." },
+            { error: "FINNHUB_API_KEY ist nicht gesetzt." },
             { status: 500 }
         );
     }
 
-    const apiUrl = new URL("https://api.twelvedata.com/quote");
-    apiUrl.searchParams.set("symbol", symbols.join(","));
-    apiUrl.searchParams.set("apikey", apiKey);
-
     try {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-
-        if (!response.ok || data.status === "error" || data.code) {
-            return Response.json(
-                {
-                    error: data.message || "Kurse konnten nicht geladen werden."
-                },
-                { status: 400 }
-            );
-        }
-
-        function normalizeQuote(raw, fallbackSymbol) {
-            if (!raw || raw.status === "error" || raw.code) {
-                return null;
-            }
-
-            return {
-                symbol: raw.symbol || fallbackSymbol,
-                name: raw.name || raw.exchange || fallbackSymbol,
-                exchange: raw.exchange || "",
-                currency: raw.currency || "USD",
-                price: Number(raw.close || raw.price || 0),
-                change: Number(raw.change || 0),
-                percentChange: Number(raw.percent_change || 0),
-                datetime: raw.datetime || "",
-                source: "Twelve Data"
-            };
-        }
-
-        let quotes = [];
-
-        if (data.symbol || data.close || data.price) {
-            const quote = normalizeQuote(data, symbols[0]);
-
-            if (quote) {
-                quotes.push(quote);
-            }
-        } else {
-            quotes = Object.keys(data)
-                .map(function (key) {
-                    return normalizeQuote(data[key], key);
-                })
-                .filter(Boolean);
-        }
+        const quotes = await Promise.all(
+            symbols.map(function (symbol) {
+                return loadQuote(symbol, apiKey);
+            })
+        );
 
         return Response.json(
             {
-                quotes: quotes,
-                source: "Twelve Data"
+                quotes: quotes.filter(Boolean),
+                source: "Finnhub"
             },
             {
                 headers: {
-                    "Cache-Control": "s-maxage=30, stale-while-revalidate=60"
+                    "Cache-Control": "no-store"
                 }
             }
         );
