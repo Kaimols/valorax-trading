@@ -9,17 +9,19 @@ const symbolNames = {
     VOW3: "Volkswagen Vz."
 };
 
-function toProviderSymbol(inputSymbol) {
-    const cleanSymbol = String(inputSymbol || "")
+function normalizeSymbol(inputSymbol) {
+    return String(inputSymbol || "")
         .trim()
         .toUpperCase()
         .replace(".DE", "");
-
-    return cleanSymbol + ".DE";
 }
 
-function toDisplaySymbol(providerSymbol) {
-    return String(providerSymbol || "")
+function toYahooSymbol(inputSymbol) {
+    return normalizeSymbol(inputSymbol) + ".DE";
+}
+
+function toDisplaySymbol(yahooSymbol) {
+    return String(yahooSymbol || "")
         .toUpperCase()
         .replace(".DE", "");
 }
@@ -28,80 +30,98 @@ function isValidGermanSymbol(symbol) {
     return /^[A-Z0-9]{1,8}$/.test(symbol);
 }
 
+function createError(message, status) {
+    return Response.json(
+        { error: message },
+        { status: status }
+    );
+}
+
 export async function GET(request) {
     const url = new URL(request.url);
 
-    const inputSymbol = (url.searchParams.get("symbol") || "")
-        .trim()
-        .toUpperCase()
-        .replace(".DE", "");
+    const inputSymbol = normalizeSymbol(url.searchParams.get("symbol"));
 
     if (!inputSymbol) {
-        return Response.json(
-            { error: "Symbol fehlt." },
-            { status: 400 }
-        );
+        return createError("Symbol fehlt.", 400);
     }
 
     if (!isValidGermanSymbol(inputSymbol)) {
-        return Response.json(
-            { error: "Bitte nutze ein deutsches EUR-Symbol, z. B. SAP, BMW, SIE oder ALV." },
-            { status: 400 }
+        return createError(
+            "Bitte nutze ein deutsches EUR-Symbol, z. B. SAP, BMW, SIE oder ALV.",
+            400
         );
     }
 
-    const apiKey = process.env.FINNHUB_API_KEY;
+    const yahooSymbol = toYahooSymbol(inputSymbol);
+    const displaySymbol = toDisplaySymbol(yahooSymbol);
 
-    if (!apiKey) {
-        return Response.json(
-            { error: "FINNHUB_API_KEY ist nicht gesetzt." },
-            { status: 500 }
-        );
-    }
+    const apiUrl = new URL(
+        "https://query1.finance.yahoo.com/v8/finance/chart/" + encodeURIComponent(yahooSymbol)
+    );
 
-    const providerSymbol = toProviderSymbol(inputSymbol);
-    const displaySymbol = toDisplaySymbol(providerSymbol);
-
-    const apiUrl = new URL("https://finnhub.io/api/v1/quote");
-    apiUrl.searchParams.set("symbol", providerSymbol);
-    apiUrl.searchParams.set("token", apiKey);
+    apiUrl.searchParams.set("range", "1d");
+    apiUrl.searchParams.set("interval", "1m");
 
     try {
-        const response = await fetch(apiUrl);
+        const response = await fetch(apiUrl, {
+            headers: {
+                "User-Agent": "Mozilla/5.0"
+            }
+        });
+
         const data = await response.json();
 
-        if (!response.ok || data.error) {
-            return Response.json(
-                { error: data.error || "Kurs konnte nicht geladen werden." },
-                { status: 400 }
-            );
+        if (!response.ok || !data.chart || data.chart.error) {
+            return createError("Kurs konnte nicht geladen werden.", 400);
         }
 
-        const price = Number(data.c || 0);
-        const previousClose = Number(data.pc || 0);
-        const change = Number(data.d || 0);
-        const percentChange = Number(data.dp || 0);
+        const result = data.chart.result && data.chart.result[0];
+
+        if (!result || !result.meta) {
+            return createError("Für dieses Symbol wurde kein Kurs gefunden.", 404);
+        }
+
+        const meta = result.meta;
+
+        const price = Number(
+            meta.regularMarketPrice ||
+            meta.previousClose ||
+            meta.chartPreviousClose ||
+            0
+        );
+
+        const previousClose = Number(
+            meta.previousClose ||
+            meta.chartPreviousClose ||
+            price ||
+            0
+        );
 
         if (!price) {
-            return Response.json(
-                {
-                    error: "Für dieses EUR-Symbol wurde kein Kurs gefunden. Versuche z. B. SAP, BMW, SIE, ALV oder DTE."
-                },
-                { status: 404 }
+            return createError(
+                "Für dieses EUR-Symbol wurde kein Kurs gefunden. Versuche z. B. SAP, BMW, SIE, ALV oder DTE.",
+                404
             );
         }
+
+        const change = price - previousClose;
+        const percentChange = previousClose
+            ? (change / previousClose) * 100
+            : 0;
 
         return Response.json(
             {
                 symbol: displaySymbol,
-                providerSymbol: providerSymbol,
+                providerSymbol: yahooSymbol,
                 name: symbolNames[displaySymbol] || displaySymbol,
-                currency: "EUR",
+                currency: meta.currency || "EUR",
                 price: price,
                 previousClose: previousClose,
                 change: change,
                 percentChange: percentChange,
-                source: "Finnhub"
+                datetime: meta.regularMarketTime || "",
+                source: "Yahoo Finance"
             },
             {
                 headers: {
@@ -110,9 +130,6 @@ export async function GET(request) {
             }
         );
     } catch (error) {
-        return Response.json(
-            { error: "Serverfehler beim Laden des Kurses." },
-            { status: 500 }
-        );
+        return createError("Serverfehler beim Laden des Kurses.", 500);
     }
 }

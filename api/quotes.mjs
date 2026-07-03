@@ -9,17 +9,19 @@ const symbolNames = {
     VOW3: "Volkswagen Vz."
 };
 
-function toProviderSymbol(inputSymbol) {
-    const cleanSymbol = String(inputSymbol || "")
+function normalizeSymbol(inputSymbol) {
+    return String(inputSymbol || "")
         .trim()
         .toUpperCase()
         .replace(".DE", "");
-
-    return cleanSymbol + ".DE";
 }
 
-function toDisplaySymbol(providerSymbol) {
-    return String(providerSymbol || "")
+function toYahooSymbol(inputSymbol) {
+    return normalizeSymbol(inputSymbol) + ".DE";
+}
+
+function toDisplaySymbol(yahooSymbol) {
+    return String(yahooSymbol || "")
         .toUpperCase()
         .replace(".DE", "");
 }
@@ -28,32 +30,77 @@ function isValidGermanSymbol(symbol) {
     return /^[A-Z0-9]{1,8}$/.test(symbol);
 }
 
-async function loadQuote(symbol, apiKey) {
-    const providerSymbol = toProviderSymbol(symbol);
-    const displaySymbol = toDisplaySymbol(providerSymbol);
+async function loadQuote(symbol) {
+    const cleanSymbol = normalizeSymbol(symbol);
+    const yahooSymbol = toYahooSymbol(cleanSymbol);
+    const displaySymbol = toDisplaySymbol(yahooSymbol);
 
-    const apiUrl = new URL("https://finnhub.io/api/v1/quote");
-    apiUrl.searchParams.set("symbol", providerSymbol);
-    apiUrl.searchParams.set("token", apiKey);
+    const apiUrl = new URL(
+        "https://query1.finance.yahoo.com/v8/finance/chart/" + encodeURIComponent(yahooSymbol)
+    );
 
-    const response = await fetch(apiUrl);
-    const data = await response.json();
+    apiUrl.searchParams.set("range", "1d");
+    apiUrl.searchParams.set("interval", "1m");
 
-    if (!response.ok || data.error || !Number(data.c || 0)) {
+    try {
+        const response = await fetch(apiUrl, {
+            headers: {
+                "User-Agent": "Mozilla/5.0"
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.chart || data.chart.error) {
+            return null;
+        }
+
+        const result = data.chart.result && data.chart.result[0];
+
+        if (!result || !result.meta) {
+            return null;
+        }
+
+        const meta = result.meta;
+
+        const price = Number(
+            meta.regularMarketPrice ||
+            meta.previousClose ||
+            meta.chartPreviousClose ||
+            0
+        );
+
+        const previousClose = Number(
+            meta.previousClose ||
+            meta.chartPreviousClose ||
+            price ||
+            0
+        );
+
+        if (!price) {
+            return null;
+        }
+
+        const change = price - previousClose;
+        const percentChange = previousClose
+            ? (change / previousClose) * 100
+            : 0;
+
+        return {
+            symbol: displaySymbol,
+            providerSymbol: yahooSymbol,
+            name: symbolNames[displaySymbol] || displaySymbol,
+            currency: meta.currency || "EUR",
+            price: price,
+            previousClose: previousClose,
+            change: change,
+            percentChange: percentChange,
+            datetime: meta.regularMarketTime || "",
+            source: "Yahoo Finance"
+        };
+    } catch (error) {
         return null;
     }
-
-    return {
-        symbol: displaySymbol,
-        providerSymbol: providerSymbol,
-        name: symbolNames[displaySymbol] || displaySymbol,
-        currency: "EUR",
-        price: Number(data.c || 0),
-        previousClose: Number(data.pc || 0),
-        change: Number(data.d || 0),
-        percentChange: Number(data.dp || 0),
-        source: "Finnhub"
-    };
 }
 
 export async function GET(request) {
@@ -73,7 +120,7 @@ export async function GET(request) {
     const symbols = symbolsParam
         .split(",")
         .map(function (symbol) {
-            return symbol.trim().replace(".DE", "");
+            return normalizeSymbol(symbol);
         })
         .filter(Boolean)
         .slice(0, 12);
@@ -89,26 +136,28 @@ export async function GET(request) {
         );
     }
 
-    const apiKey = process.env.FINNHUB_API_KEY;
-
-    if (!apiKey) {
-        return Response.json(
-            { error: "FINNHUB_API_KEY ist nicht gesetzt." },
-            { status: 500 }
-        );
-    }
-
     try {
         const quotes = await Promise.all(
             symbols.map(function (symbol) {
-                return loadQuote(symbol, apiKey);
+                return loadQuote(symbol);
             })
         );
 
+        const validQuotes = quotes.filter(Boolean);
+
+        if (validQuotes.length === 0) {
+            return Response.json(
+                {
+                    error: "Keine Kurse gefunden. Prüfe die Symbole, z. B. SAP, BMW, SIE, ALV oder DTE."
+                },
+                { status: 404 }
+            );
+        }
+
         return Response.json(
             {
-                quotes: quotes.filter(Boolean),
-                source: "Finnhub"
+                quotes: validQuotes,
+                source: "Yahoo Finance"
             },
             {
                 headers: {
