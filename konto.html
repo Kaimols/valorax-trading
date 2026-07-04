@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ValoraX Konto</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg: #050505;
+            --card: #111111;
+            --text: #ffffff;
+            --muted: #666a73;
+            --muted-strong: #8e8e93;
+            --border: rgba(255, 255, 255, 0.08);
+            --blue: #2563eb;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            overflow-x: hidden;
+        }
+
+        #app {
+            width: min(520px, 100%);
+            min-height: 100vh;
+            margin: 0 auto;
+            padding-bottom: 118px;
+            background: var(--bg);
+            position: relative;
+        }
+
+        header {
+            padding: 22px 20px 10px;
+            position: sticky;
+            top: 0;
+            background: rgba(5, 5, 5, 0.88);
+            backdrop-filter: blur(18px);
+            z-index: 20;
+        }
+
+        #topBar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        #topTabs {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+        }
+
+        .topTab {
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            font-size: 28px;
+            font-weight: 850;
+            letter-spacing: -1px;
+            cursor: pointer;
+        }
+
+        #profileButton {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: none;
+            background: #6b7280;
+            cursor: pointer;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profileIcon {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 3px solid #050505;
+            position: relative;
+            display: block;
+            margin-top: -8px;
+        }
+
+        .profileIcon::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: -18px;
+            transform: translateX(-50%);
+            width: 26px;
+            height: 14px;
+            border: 3px solid #050505;
+            border-bottom: none;
+            border-radius: 18px 18px 0 0;
+        }
+
+        main {
+            padding: 74px 20px 24px;
+        }
+
+        #accountCards {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            scrollbar-width: none;
+        }
+
+        #accountCards::-webkit-scrollbar {
+            display: none;
+        }
+
+        .accountCard {
+            min-width: 178px;
+            height: 130px;
+            border-radius: 23px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: white;
+            padding: 20px;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .accountCard h3 {
+            color: var(--muted);
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            margin-bottom: 20px;
+        }
+
+        .accountCard strong {
+            display: block;
+            font-size: 22px;
+            font-weight: 900;
+        }
+
+        .miniIcon {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #6b7280;
+            color: #050505;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 900;
+        }
+
+        #services {
+            margin-top: 70px;
+        }
+
+        #services h2 {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -0.7px;
+            margin-bottom: 42px;
+        }
+
+        .serviceRow {
+            display: grid;
+            grid-template-columns: 48px 1fr;
+            align-items: center;
+            gap: 22px;
+            margin-bottom: 40px;
+            cursor: pointer;
+        }
+
+        .serviceIcon {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: white;
+            color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            font-weight: 900;
+        }
+
+        .serviceIcon.blue {
+            background: var(--blue);
+            color: black;
+        }
+
+        .serviceText h3 {
+            font-size: 23px;
+            font-weight: 900;
+            letter-spacing: -0.7px;
+            margin-bottom: 8px;
+        }
+
+        .serviceText p {
+            color: var(--muted);
+            font-size: 18px;
+            font-weight: 800;
+            line-height: 1.25;
+        }
+
+        .blueText h3,
+        .blueText p {
+            color: var(--blue);
+        }
+
+        #bottomActions {
+            position: fixed;
+            left: 50%;
+            bottom: 18px;
+            transform: translateX(-50%);
+            width: min(520px, 100%);
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            z-index: 35;
+            pointer-events: none;
+        }
+
+        #bottomActions button {
+            height: 62px;
+            border-radius: 22px;
+            border: none;
+            background: #f2f2f2;
+            color: black;
+            font-size: 18px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 12px 34px rgba(0, 0, 0, 0.5);
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 22px;
+        }
+
+        #bottomActions button span {
+            font-size: 28px;
+            line-height: 1;
+            font-weight: 700;
+        }
+
+        .topTab:active,
+        .accountCard:active,
+        .serviceRow:active,
+        #profileButton:active,
+        #bottomActions button:active {
+            transform: scale(0.98);
+        }
+
+        @media (min-width: 760px) {
+            body {
+                background:
+                    radial-gradient(circle at top, rgba(34, 197, 94, 0.08), transparent 28%),
+                    #000;
+            }
+
+            #app {
+                border-left: 1px solid var(--border);
+                border-right: 1px solid var(--border);
+            }
+        }
+
+        @media (max-width: 390px) {
+            .topTab {
+                font-size: 25px;
+            }
+
+            .serviceText h3 {
+                font-size: 21px;
+            }
+
+            .serviceText p {
+                font-size: 16px;
+            }
+
+            #bottomActions button {
+                font-size: 16px;
+                padding: 0 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <header>
+            <div id="topBar">
+                <div id="topTabs">
+                    <button class="topTab" id="portfolioTab">Portfolio</button>
+                    <button class="topTab" id="cashTab">Cash</button>
+                </div>
+
+                <button id="profileButton" aria-label="Zurück zum Dashboard">
+                    <span class="profileIcon"></span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <section id="accountCards">
+                <button class="accountCard" id="mailButton">
+                    <h3>Postbox</h3>
+                    <div class="miniIcon">✉</div>
+                </button>
+
+                <button class="accountCard" id="inviteButton">
+                    <h3>Einladung</h3>
+                    <strong>Erhalte 10 €</strong>
+                </button>
+            </section>
+
+            <section id="services">
+                <h2>Services</h2>
+
+                <div class="serviceRow" id="supportButton">
+                    <div class="serviceIcon blue">☎</div>
+                    <div class="serviceText blueText">
+                        <h3>Kundenservice</h3>
+                        <p>Erreiche uns rund um die Uhr</p>
+                    </div>
+                </div>
+
+                <div class="serviceRow" id="taxButton">
+                    <div class="serviceIcon">▣</div>
+                    <div class="serviceText">
+                        <h3>Steuern</h3>
+                        <p>Steuer ID, Freistellungsauftrag, Verrechnung</p>
+                    </div>
+                </div>
+
+                <div class="serviceRow" id="statementsButton">
+                    <div class="serviceIcon">▤</div>
+                    <div class="serviceText">
+                        <h3>Kontoauszüge</h3>
+                        <p>Cash, Portfolio, Steuern, Transaktionsexport</p>
+                    </div>
+                </div>
+
+                <div class="serviceRow" id="settingsButton">
+                    <div class="serviceIcon">◆</div>
+                    <div class="serviceText">
+                        <h3>Einstellungen</h3>
+                        <p>Persönliche Daten, Sicherheit, Abmeldung</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div id="bottomActions">
+            <button id="searchButton">
+                Suche
+                <span>⌕</span>
+            </button>
+
+            <button id="transferButton">
+                Überweisen
+                <span>⌃</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function readStorage(key, fallback) {
+            try {
+                return JSON.parse(localStorage.getItem(key)) || fallback;
+            } catch (error) {
+                return fallback;
+            }
+        }
+
+        function getCurrentUser() {
+            return readStorage("valorax_current_user", null);
+        }
+
+        function loadUser() {
+            const savedUser = getCurrentUser();
+
+            if (!savedUser) {
+                window.location.href = "index.html";
+            }
+        }
+
+        document.getElementById("portfolioTab").onclick = function () {
+            window.location.href = "dashboard.html";
+        };
+
+        document.getElementById("cashTab").onclick = function () {
+            window.location.href = "dashboard.html";
+        };
+
+        document.getElementById("profileButton").onclick = function () {
+            window.location.href = "dashboard.html";
+        };
+
+        document.getElementById("searchButton").onclick = function () {
+            window.location.href = "search.html";
+        };
+
+        document.getElementById("transferButton").onclick = function () {
+            window.location.href = "dashboard.html";
+        };
+
+        document.getElementById("mailButton").onclick = function () {
+            alert("Postbox kommt als nächstes.");
+        };
+
+        document.getElementById("inviteButton").onclick = function () {
+            alert("Einladungen kommen als nächstes.");
+        };
+
+        document.getElementById("supportButton").onclick = function () {
+            alert("Kundenservice kommt als nächstes.");
+        };
+
+        document.getElementById("taxButton").onclick = function () {
+            alert("Steuern kommen als nächstes.");
+        };
+
+        document.getElementById("statementsButton").onclick = function () {
+            alert("Kontoauszüge kommen als nächstes.");
+        };
+
+        document.getElementById("settingsButton").onclick = function () {
+            alert("Einstellungen kommen als nächstes.");
+        };
+
+        loadUser();
+    </script>
+
+</body>
+</html>

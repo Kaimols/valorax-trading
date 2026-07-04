@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ValoraX Asset</title>
+
+    <link rel="stylesheet" href="asset.css">
+</head>
+<body>
+
+    <div id="successToast" aria-live="polite"></div>
+
+    <div id="app">
+        <div id="handleWrap"></div>
+
+        <div id="topRow">
+            <div id="assetIcon"></div>
+            <button id="watchButton" aria-label="Zur Watchlist hinzufügen"></button>
+        </div>
+
+        <section id="hero">
+            <h1 id="assetName">...</h1>
+
+            <div id="priceRow">
+                <div id="assetPrice">0,00 €</div>
+                <div id="assetChange" class="neutral">–</div>
+            </div>
+        </section>
+
+        <section id="positionCardsSection">
+            <div id="positionCards">
+                <button class="positionMiniCard" id="openPositionView">
+                    <span>Position</span>
+                    <strong id="miniPositionValue">0,00 €</strong>
+                </button>
+
+                <button class="positionMiniCard" id="openPerformanceView">
+                    <span>Performance</span>
+                    <strong class="positive" id="miniPerformanceValue">▲ 0,00 %</strong>
+                </button>
+            </div>
+        </section>
+
+        <section id="infoSection">
+            <h2 class="sectionTitle">Informationen <span>›</span></h2>
+            <p id="infoText">...</p>
+        </section>
+
+        <section id="statsSection">
+            <h2 class="sectionTitle">Wichtigste Statistiken</h2>
+
+            <div id="statsGrid">
+                <div class="statLabel">Geld</div>
+                <div class="statValue" id="bidPrice">0,00 €</div>
+
+                <div class="statLabel">Brief</div>
+                <div class="statValue" id="askPrice">0,00 €</div>
+
+                <div class="statLabel">Angebot im Umlauf</div>
+                <div class="statValue" id="supplyValue">0</div>
+
+                <div class="statLabel">Am Markt verfügbar</div>
+                <div class="statValue" id="marketAvailable">0,00 %</div>
+            </div>
+
+            <div id="priceAlarm">Preisalarme <span>›</span></div>
+        </section>
+
+        <section id="newsSection">
+            <h2 id="newsTitle">Nachrichten <span>›</span></h2>
+            <h3 id="newsHeadline">...</h3>
+            <p id="newsTime">vor 2 Jahren</p>
+        </section>
+
+        <p id="riskText">
+            Die angegebenen Preise beziehen sich auf den unmittelbar vorhergehenden Geldkurs bei Tradias.
+            Kryptowährungen sind aufgrund ihrer Volatilität eine risikoreiche Anlage.
+            Die frühere Wertentwicklung ist kein Hinweis auf zukünftige Ergebnisse.
+            Die Daten im Abschnitt „Info“ werden von Coingecko bereitgestellt.
+            Alle angezeigten Angaben sind aufgrund verbindungsbedingter Verzögerungen möglicherweise nicht mehr aktuell.
+        </p>
+    </div>
+
+    <div id="bottomActions">
+        <button id="savingsPlanButton">
+            Sparplan
+            <span>↻</span>
+        </button>
+
+        <button id="buyButton">
+            Kaufen
+            <span>＋</span>
+        </button>
+    </div>
+
+    <div id="positionDetailView" class="detailView">
+        <div class="detailHandle"></div>
+
+        <h1>Position</h1>
+        <p class="detailAssetName" id="positionAssetName">...</p>
+
+        <section class="detailSection">
+            <h2>Übersicht</h2>
+
+            <div class="detailRow">
+                <span>Gesamtwert</span>
+                <strong id="detailTotalValue">0,00 €</strong>
+            </div>
+
+            <div class="detailRow">
+                <span>Assets</span>
+                <strong id="detailAssetAmount">0</strong>
+            </div>
+
+            <div class="detailRow">
+                <span>Einstandskurs <b>›</b></span>
+                <strong id="detailEntryPrice">0,00 €</strong>
+            </div>
+        </section>
+
+        <p class="detailHelpText">
+            Kontaktiere uns, wenn du <strong>Hilfe benötigst</strong>
+        </p>
+    </div>
+
+    <div id="performanceDetailView" class="detailView">
+    <div class="detailHandle"></div>
+
+    <h1>Performance</h1>
+    <p class="detailAssetName" id="performanceAssetName">...</p>
+
+    <section class="detailSection">
+        <h2>Übersicht</h2>
+
+        <div class="detailRow">
+            <span>Performance</span>
+            <strong class="positive" id="detailPerformanceValue">▲ 0,00 %</strong>
+        </div>
+
+        <div class="detailRow">
+            <span>Gewinn</span>
+            <strong class="positive" id="detailProfitValue">▲ 0,00 €</strong>
+        </div>
+    </section>
+
+    <section class="detailSection second" id="assetTransactionsSection">
+        <h2>Transaktionen</h2>
+
+        <div id="assetTransactionsList"></div>
+        <p id="assetTransactionsEmptyText">Noch keine Transaktionen.</p>
+    </section>
+
+    <p class="detailHelpText">
+        Kontaktiere uns, wenn du <strong>Hilfe benötigst</strong>
+    </p>
+</div>
+
+    <div id="overlay"></div>
+
+    <div id="orderSheet">
+        <div class="sheetHandle"></div>
+
+        <div id="sheetTitle">Kaufen</div>
+
+        <label for="orderAmount">Betrag</label>
+        <input id="orderAmount" type="number" min="1" step="1" placeholder="0 €">
+
+        <div id="orderPreview"></div>
+
+        <button id="confirmOrder">Kaufen</button>
+
+        <div id="orderMessage"></div>
+    </div>
+
+    <div id="buyFullSheet">
+        <div id="buyFullHandle"></div>
+
+        <div id="buyAssetIcon"></div>
+
+        <h1>Kaufe</h1>
+
+        <div id="buyBalanceLine">
+            <strong id="buyAvailableBalance">0,00 € verfügbar</strong>
+            <span>›</span>
+        </div>
+
+        <div id="buyAmountDisplay">0 ×</div>
+        <div id="buyPriceLine">Preis: 0,00 €</div>
+        <div id="buyOrderError"></div>
+
+        <div id="buyKeyboard">
+            <button class="buyKey" data-key="1">1</button>
+            <button class="buyKey" data-key="2">2</button>
+            <button class="buyKey" data-key="3">3</button>
+
+            <button class="buyKey" data-key="4">4</button>
+            <button class="buyKey" data-key="5">5</button>
+            <button class="buyKey" data-key="6">6</button>
+
+            <button class="buyKey" data-key="7">7</button>
+            <button class="buyKey" data-key="8">8</button>
+            <button class="buyKey" data-key="9">9</button>
+
+            <button class="buyKey" data-key=",">,</button>
+            <button class="buyKey" data-key="0">0</button>
+            <button class="buyKey" data-key="delete">←</button>
+        </div>
+
+        <div id="buyBottomActions">
+            <button id="buyModeButton">
+                Anteile
+                <span></span>
+            </button>
+
+            <button id="buyNextButton" disabled>
+                Weiter
+                <span>›</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="buyConfirmSheet">
+        <div id="buyConfirmHandle"></div>
+
+        <div id="buyConfirmAssetIcon"></div>
+
+        <h1 id="buyConfirmTitle">Kaufe</h1>
+
+        <div id="buyConfirmDetails">
+            <div class="buyConfirmRow">
+                <span>Typ</span>
+                <strong>Kauf</strong>
+            </div>
+
+            <div class="buyConfirmRow">
+                <span>Zahlung</span>
+                <strong>≋ Cash</strong>
+            </div>
+
+            <div class="buyConfirmRow">
+                <span>Asset</span>
+                <strong id="buyConfirmAssetName">Ethereum</strong>
+            </div>
+
+            <div class="buyConfirmRow">
+                <span>Auftrag</span>
+                <strong>
+                    <small id="buyConfirmUnits">0 ×</small>
+                    <span id="buyConfirmPrice">0,00 €</span>
+                </strong>
+            </div>
+
+            <div class="buyConfirmRow">
+                <span>Gesamt</span>
+                <strong id="buyConfirmTotal">0,00 €</strong>
+            </div>
+        </div>
+
+        <p id="buyConfirmInfoText">
+            Der Kauf wird zum aktuellen <strong>Briefpreis</strong> ausgeführt.
+        </p>
+
+        <div id="buyConfirmError"></div>
+
+        <div id="buyConfirmBottomActions">
+            <button id="buyConfirmBackButton">‹</button>
+
+            <button id="buyConfirmButton" class="isActive">
+                Kaufen
+                <span>✓</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="buyTypeOverlay"></div>
+
+    <div id="buyTypeSheet">
+        <div id="buyTypeHandle"></div>
+
+        <h1 id="buyTypeTitle">Orderart</h1>
+
+        <div id="buyTypeList">
+            <div class="buyTypeOption" data-buy-mode="AMOUNT">
+                <div class="buyTypeIcon">●</div>
+
+                <div class="buyTypeInfo">
+                    <h3>Betrag</h3>
+                    <p>Kaufe Assets oder investiere einen Betrag zum Marktpreis.</p>
+                </div>
+
+                <div class="buyTypeCheck"></div>
+            </div>
+
+            <div class="buyTypeOption selected" data-buy-mode="UNITS">
+                <div class="buyTypeIcon">ϟ</div>
+
+                <div class="buyTypeInfo">
+                    <h3>Anteile</h3>
+                    <p>Beliebige Anzahl von Assets zum aktuellen Börsenkurs kaufen</p>
+                </div>
+
+                <div class="buyTypeCheck"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tradeActionsOverlay"></div>
+
+    <div id="tradeActionsPanel">
+        <button class="tradeActionButton" id="openBuyFromTradeButton">
+            Kaufen
+            <span>＋</span>
+        </button>
+
+        <button class="tradeActionButton" id="openSellFromTradeButton">
+            Verkaufen
+            <span>−</span>
+        </button>
+
+        <button id="closeTradeActionsButton">×</button>
+    </div>
+
+    <div id="sellOverlay"></div>
+
+    <div id="sellSheet">
+        <div id="sellHandle"></div>
+
+        <h1>Verkaufe</h1>
+
+        <div id="sellOwnedLine">
+            Du besitzt <strong id="sellOwnedValue">0,00 €</strong>
+            <span>›</span>
+        </div>
+
+        <div id="sellQuickGrid">
+            <button class="sellQuickButton" data-sell-percent="25">25 %</button>
+            <button class="sellQuickButton" data-sell-percent="50">50 %</button>
+            <button class="sellQuickButton" data-sell-percent="100">100 %</button>
+            <button class="sellQuickButton" data-sell-percent="custom">...</button>
+        </div>
+    </div>
+
+    <div id="sellAmountSheet">
+        <div class="sellFullHandle" id="sellAmountHandle"></div>
+
+        <div id="sellAmountAssetIcon"></div>
+
+        <h1>Verkaufe</h1>
+
+        <div id="sellAmountOwnedLine">
+            Du besitzt <strong id="sellAmountOwnedValue">0,00 €</strong>
+            <span>›</span>
+        </div>
+
+        <div id="sellAmountDisplay">0 €</div>
+        <div id="sellAmountPriceLine">Preis: 0,00 €</div>
+        <div id="sellAmountError"></div>
+
+        <div id="sellAmountKeyboard">
+            <button class="sellKey" data-key="1">1</button>
+            <button class="sellKey" data-key="2">2</button>
+            <button class="sellKey" data-key="3">3</button>
+
+            <button class="sellKey" data-key="4">4</button>
+            <button class="sellKey" data-key="5">5</button>
+            <button class="sellKey" data-key="6">6</button>
+
+            <button class="sellKey" data-key="7">7</button>
+            <button class="sellKey" data-key="8">8</button>
+            <button class="sellKey" data-key="9">9</button>
+
+            <button class="sellKey" data-key=",">,</button>
+            <button class="sellKey" data-key="0">0</button>
+            <button class="sellKey" data-key="delete">←</button>
+        </div>
+
+        <div id="sellAmountBottomActions">
+            <button id="sellAmountModeButton">
+                Betrag
+                <span></span>
+            </button>
+
+            <button id="sellAmountNextButton" disabled>
+                Weiter
+                <span>›</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="sellConfirmSheet">
+        <div class="sellFullHandle" id="sellConfirmHandle"></div>
+
+        <div id="sellConfirmAssetIcon"></div>
+
+        <h1 id="sellConfirmTitle">Verkaufe 25 % deiner Position</h1>
+
+        <div id="sellConfirmDetails">
+            <div class="sellConfirmRow">
+                <span>Typ</span>
+                <strong>Verkauf</strong>
+            </div>
+
+            <div class="sellConfirmRow">
+                <span>Zahlung</span>
+                <strong>≋ Cash</strong>
+            </div>
+
+            <div class="sellConfirmRow">
+                <span>Asset</span>
+                <strong id="sellConfirmAssetName">Ethereum</strong>
+            </div>
+
+            <div class="sellConfirmRow">
+                <span>Auftrag</span>
+                <strong>
+                    <small id="sellConfirmUnits">0 ×</small>
+                    <span id="sellConfirmPrice">0,00 €</span>
+                </strong>
+            </div>
+
+            <div class="sellConfirmRow">
+                <span>Gesamt</span>
+                <strong id="sellConfirmTotal">0,00 €</strong>
+            </div>
+        </div>
+
+        <p id="sellCostInfoText">
+            Hier findest du die <strong>Kosteninformation.</strong>
+        </p>
+
+        <div id="sellConfirmBottomActions">
+            <button id="sellConfirmBackButton">‹</button>
+
+            <button id="sellConfirmButton" class="isActive">
+                Verkaufen
+                <span>✓</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="savingsAmountSheet">
+        <div class="savingsFullHandle" id="savingsAmountHandle"></div>
+
+        <div id="savingsAmountAssetIcon"></div>
+
+        <h1>Spare</h1>
+
+        <div id="savingsAmountDisplay">0 €</div>
+        <div id="savingsAmountError"></div>
+
+        <div id="savingsAmountKeyboard">
+            <button class="savingsKey" data-key="1">1</button>
+            <button class="savingsKey" data-key="2">2</button>
+            <button class="savingsKey" data-key="3">3</button>
+
+            <button class="savingsKey" data-key="4">4</button>
+            <button class="savingsKey" data-key="5">5</button>
+            <button class="savingsKey" data-key="6">6</button>
+
+            <button class="savingsKey" data-key="7">7</button>
+            <button class="savingsKey" data-key="8">8</button>
+            <button class="savingsKey" data-key="9">9</button>
+
+            <button class="savingsKey savingsKeyEmpty" data-key=""></button>
+            <button class="savingsKey" data-key="0">0</button>
+            <button class="savingsKey" data-key="delete">←</button>
+        </div>
+
+        <div id="savingsAmountBottomActions">
+            <button id="savingsAmountBackButton">‹</button>
+
+            <button id="savingsAmountNextButton" disabled>
+                Weiter
+                <span>›</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="savingsFrequencySheet">
+        <div class="savingsFullHandle" id="savingsFrequencyHandle"></div>
+
+        <div id="savingsFrequencyAssetIcon"></div>
+
+        <h1 id="savingsFrequencyTitle">Spare 1 €</h1>
+
+        <div class="savingsChoiceList">
+            <button class="savingsChoiceRow" data-frequency="WEEKLY">
+                <span class="savingsCalendarIcon"></span>
+                <strong>Wöchentlich</strong>
+                <span class="savingsChoiceArrow">›</span>
+            </button>
+
+            <button class="savingsChoiceRow" data-frequency="TWICE_MONTHLY">
+                <span class="savingsCalendarIcon"></span>
+                <strong>Zweimal im Monat</strong>
+                <span class="savingsChoiceArrow">›</span>
+            </button>
+
+            <button class="savingsChoiceRow" data-frequency="MONTHLY">
+                <span class="savingsCalendarIcon"></span>
+                <strong>Monatlich</strong>
+                <span class="savingsChoiceArrow">›</span>
+            </button>
+
+            <button class="savingsChoiceRow" data-frequency="QUARTERLY">
+                <span class="savingsCalendarIcon"></span>
+                <strong>Alle drei Monate</strong>
+                <span class="savingsChoiceArrow">›</span>
+            </button>
+        </div>
+
+        <div id="savingsFrequencyBottomActions">
+            <button id="savingsFrequencyBackButton">‹</button>
+        </div>
+    </div>
+
+    <div id="savingsStartSheet">
+        <div class="savingsFullHandle" id="savingsStartHandle"></div>
+
+        <div id="savingsStartAssetIcon"></div>
+
+        <h1 id="savingsStartTitle">Spare 1 € wöchentlich zum</h1>
+
+        <div class="savingsChoiceList">
+            <button class="savingsChoiceRow savingsChoiceRowWithSub" data-start="BEGINNING">
+                <span class="savingsCalendarIcon"></span>
+
+                <span>
+                    <strong>zum Monatsanfang</strong>
+                    <small id="savingsStartBeginningText">Start am 3. Aug. 26</small>
+                </span>
+
+                <span class="savingsChoiceArrow">›</span>
+            </button>
+
+            <button class="savingsChoiceRow savingsChoiceRowWithSub" data-start="MIDDLE">
+                <span class="savingsCalendarIcon"></span>
+
+                <span>
+                    <strong>zur Mitte des Monats</strong>
+                    <small id="savingsStartMiddleText">Start am 16. Juli 26</small>
+                </span>
+
+                <span class="savingsChoiceArrow">›</span>
+            </button>
+        </div>
+
+        <div id="savingsStartBottomActions">
+            <button id="savingsStartBackButton">‹</button>
+        </div>
+    </div>
+
+    <div id="savingsConfirmSheet">
+        <div class="savingsFullHandle" id="savingsConfirmHandle"></div>
+
+        <div id="savingsConfirmAssetIcon"></div>
+
+        <h1 id="savingsConfirmTitle">Spare 1 € wöchentlich zum Monatsanfang und zahle mit Cash</h1>
+
+        <div id="savingsConfirmDetails">
+            <div class="savingsConfirmRow">
+                <span>Typ</span>
+                <strong>Sparplan</strong>
+            </div>
+
+            <div class="savingsConfirmRow">
+                <span>Zahlung <b>›</b></span>
+                <strong>≋ Cash</strong>
+            </div>
+
+            <div class="savingsConfirmRow">
+                <span>Asset</span>
+                <strong id="savingsConfirmAssetName">Bitcoin</strong>
+            </div>
+
+            <div class="savingsConfirmRow">
+                <span>Intervall</span>
+                <strong id="savingsConfirmInterval">Ab dem 3. Aug. · Wöchentlich</strong>
+            </div>
+
+            <div class="savingsConfirmRow">
+                <span>Gesamt</span>
+                <strong id="savingsConfirmTotal">1,00 €</strong>
+            </div>
+        </div>
+
+        <p id="savingsConfirmInfoText">
+            Indem du fortfährst, stimmst du unserer <strong>Kundenvereinbarung</strong> zu.
+            Hier findest du die <strong>Kosteninformation.</strong>
+        </p>
+
+        <div id="savingsConfirmBottomActions">
+            <button id="savingsConfirmBackButton">‹</button>
+
+            <button id="savingsConfirmCreateButton" class="isActive">
+                Erstellen
+                <span>✓</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="assets.js"></script>
+    <script src="market.js"></script>
+    <script src="asset.js"></script>
+
+</body>
+</html>

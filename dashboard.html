@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ValoraX Dashboard</title>
+
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+    <div id="app">
+        <header>
+            <div id="topBar">
+                <div id="topTabs">
+                    <button class="topTab active" data-section="homeSection">Portfolio</button>
+                    <button class="topTab" data-section="cashSection">Cash</button>
+                </div>
+
+                <button id="profileButton" aria-label="Kontoeinstellungen">
+                    <span class="profileIcon"></span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <section id="homeSection" class="section active">
+                <div id="homeTop">
+                    <div class="amountLabel">Gesamt</div>
+                    <div id="totalBalance">0,00 €</div>
+                </div>
+
+                <div id="portfolioCards">
+                    <button class="shortcutCard" id="savingsPlanButton">
+                        <span>Sparpläne</span>
+                        <strong>+</strong>
+                    </button>
+
+                    <button class="shortcutCard" id="orderButton">
+                        <span>Order</span>
+                        <strong>+</strong>
+                    </button>
+                </div>
+
+                <div id="investmentsSection">
+                    <div id="investmentsHeader">
+                        <h2>Investments</h2>
+                        <span id="splitLabel">Split</span>
+                    </div>
+
+                    <div class="investmentRow disabledInvestmentRow" id="brokerageRow">
+                        <div>
+                            <h3>Brokerage</h3>
+                            <p id="brokerageValue">Deaktiviert</p>
+                        </div>
+
+                        <div class="investmentRight">
+                            <strong id="brokeragePercent">0 %</strong>
+                            <span class="emptyCircle" id="brokerageCircle"></span>
+                        </div>
+                    </div>
+
+                    <div class="investmentRow disabledInvestmentRow" id="privateMarketsRow">
+                        <div>
+                            <h3>Private Markets</h3>
+                            <p>Demnächst verfügbar</p>
+                        </div>
+
+                        <div class="investmentRight">
+                            <strong>0 %</strong>
+                            <span class="emptyCircle"></span>
+                        </div>
+                    </div>
+
+                    <div class="investmentRow clickableRow" id="cryptoWalletRow">
+                        <div>
+                            <h3>Crypto Wallet</h3>
+                            <p id="cryptoWalletValue">0,00 €</p>
+                        </div>
+
+                        <div class="investmentRight">
+                            <strong id="cryptoPercent">0 %</strong>
+                            <span class="emptyCircle" id="cryptoCircle"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="cashSection" class="section">
+                <div id="cashTop">
+                    <div class="amountLabel">Verfügbar</div>
+                    <div class="cashNumber" id="cashBalance">0,00 €</div>
+                </div>
+
+                <div id="cashCards">
+                    <button class="cashShortcutCard" id="addCardButton">
+                        <span>Karte hinzufügen</span>
+                        <strong>+</strong>
+                    </button>
+
+                    <button class="cashShortcutCard" id="interestButton">
+                        <span>Zinsen</span>
+                        <strong id="interestValue">0 €</strong>
+                    </button>
+                </div>
+
+                <section id="transactionsSection">
+                    <h2 id="transactionsOpenButton">Transaktionen <span>›</span></h2>
+
+                    <div id="transactionsList"></div>
+                    <p id="emptyTransactions">Noch keine Transaktionen.</p>
+                </section>
+
+                <p id="cashInfoText">
+                    Erfahre mehr darüber, wie dein <strong>verfügbares Cash</strong> verteilt wird.
+                </p>
+
+                <div class="profileCard hiddenProfile">
+                    <div class="profileRow">
+                        <p>E-Mail</p>
+                        <strong id="profileEmail">...</strong>
+                    </div>
+
+                    <div class="profileRow">
+                        <p>Handynummer</p>
+                        <strong id="profilePhone">...</strong>
+                    </div>
+
+                    <div class="profileRow">
+                        <p>Kontotyp</p>
+                        <strong>Paper Trading</strong>
+                    </div>
+                </div>
+
+                <button id="resetButton" class="hiddenProfile">Paper-Konto zurücksetzen</button>
+                <button id="logoutButton" class="hiddenProfile">Ausloggen</button>
+            </section>
+        </main>
+
+        <div id="bottomActions">
+            <button id="searchButton">
+                Suche
+                <span>⌕</span>
+            </button>
+
+            <button id="transferButton">
+                Überweisen
+                <span>⌃</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="overlay"></div>
+
+    <div id="cashSheet">
+        <div class="sheetHandle"></div>
+
+        <div id="cashSheetTitle">Einzahlen</div>
+
+        <label for="cashAmount">Betrag</label>
+        <input id="cashAmount" type="number" min="1" step="1" placeholder="0 €">
+
+        <div id="cashPreview"></div>
+
+        <button id="confirmCash">Bestätigen</button>
+
+        <div id="cashSheetMessage"></div>
+    </div>
+
+    <div id="orderOverlay"></div>
+
+    <div id="ordersSheet">
+        <div class="sheetHandle"></div>
+
+        <h1>Orders</h1>
+        <p id="ordersSubline">Alle offenen Orders bearbeiten</p>
+
+        <div id="orderCategoryTabs">
+            <button class="orderCategory active" data-type="CRYPTO">Crypto Wallet</button>
+        </div>
+
+        <section id="howItWorks">
+            <h2>So funktioniert es</h2>
+
+            <div class="stepRow">
+                <div class="stepNumber">1</div>
+                <div>
+                    <h3>Investment auswählen</h3>
+                    <p id="stepOneText">Crypto auswählen</p>
+                </div>
+            </div>
+
+            <div class="stepRow">
+                <div class="stepNumber">2</div>
+                <div>
+                    <h3>Betrag auswählen</h3>
+                    <p>Ab 1 €</p>
+                </div>
+            </div>
+
+            <div class="stepRow">
+                <div class="stepNumber">3</div>
+                <div>
+                    <h3>Order erteilen</h3>
+                    <p>Market, Limit oder Stop Order</p>
+                </div>
+            </div>
+        </section>
+
+        <p id="orderHelpText">
+            Kontaktiere uns, wenn du <strong>Hilfe benötigst</strong>
+        </p>
+
+        <button id="addOrderButton">
+            Hinzufügen
+            <span>＋</span>
+        </button>
+    </div>
+
+    <div id="savingsPlanSheet">
+        <div class="sheetHandle" id="savingsPlanHandle"></div>
+
+        <h1>Sparpläne</h1>
+        <p id="savingsPlanSubtitle">Investiere regelmäßig, gebührenfrei</p>
+
+        <div id="savingsPlanTabs">
+            <button class="savingsPlanTab active">Crypto Wallet</button>
+        </div>
+
+        <section id="savingsPlanHowItWorks">
+            <h2>So funktioniert es</h2>
+
+            <div class="savingsPlanStepRow">
+                <div class="savingsPlanStepNumber">1</div>
+                <div>
+                    <h3>Investment auswählen</h3>
+                    <p>Crypto auswählen</p>
+                </div>
+            </div>
+
+            <div class="savingsPlanStepRow">
+                <div class="savingsPlanStepNumber">2</div>
+                <div>
+                    <h3>Sparbetrag festlegen</h3>
+                    <p>Ab 1 €</p>
+                </div>
+            </div>
+
+            <div class="savingsPlanStepRow">
+                <div class="savingsPlanStepNumber">3</div>
+                <div>
+                    <h3>Häufigkeit und Startdatum festlegen</h3>
+                    <p>Wöchentlich, monatlich oder vierteljährlich</p>
+                </div>
+            </div>
+        </section>
+
+        <p id="savingsPlanHelpText">
+            Kontaktiere uns, wenn du <strong>Hilfe benötigst</strong>
+        </p>
+
+        <button id="savingsPlanInvestButton">
+            Investiere
+            <span>›</span>
+        </button>
+    </div>
+
+    <div id="transferSheet">
+        <div class="sheetHandle" id="transferHandle"></div>
+
+        <h1>Überweisung</h1>
+
+        <section id="transferActions">
+            <div class="transferActionRow" id="depositTransferAction">
+                <div class="transferActionIcon">
+                    <img src="assets/icons/deposit.png" alt="Einzahlen Symbol">
+                </div>
+                <h2>Geld einzahlen</h2>
+            </div>
+
+            <div class="transferActionRow" id="newIbanTransferAction">
+                <div class="transferActionIcon">
+                    <img src="assets/icons/iban.png" alt="IBAN Symbol">
+                </div>
+                <h2>An neue IBAN senden</h2>
+            </div>
+        </section>
+    </div>
+
+    <div id="newIbanSheet">
+        <div class="sheetHandle" id="newIbanHandle"></div>
+
+        <div id="newIbanUserIcon"></div>
+
+        <h1>Senden an</h1>
+
+        <div id="newIbanForm">
+            <input id="newIbanNameInput" class="newIbanInput" type="text" placeholder="Name" autocomplete="off">
+            <input id="newIbanInput" class="newIbanInput ibanInput" type="text" placeholder="IBAN" autocomplete="off" inputmode="text">
+        </div>
+
+        <div id="newIbanBottomActions">
+            <button id="newIbanBackButton">‹</button>
+
+            <button id="newIbanNextButton" disabled>
+                Weiter
+                <span>›</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="sendAmountSheet">
+        <div class="sheetHandle" id="sendAmountHandle"></div>
+
+        <h1 id="sendAmountTitle">An Alexej senden</h1>
+        <div id="sendAvailableText">0,00 € verfügbar</div>
+
+        <div id="sendAmountDisplay">0 €</div>
+        <div id="sendAmountError"></div>
+
+        <div id="sendAmountKeyboard">
+            <button class="sendKey" data-key="1">1</button>
+            <button class="sendKey" data-key="2">2</button>
+            <button class="sendKey" data-key="3">3</button>
+
+            <button class="sendKey" data-key="4">4</button>
+            <button class="sendKey" data-key="5">5</button>
+            <button class="sendKey" data-key="6">6</button>
+
+            <button class="sendKey" data-key="7">7</button>
+            <button class="sendKey" data-key="8">8</button>
+            <button class="sendKey" data-key="9">9</button>
+
+            <button class="sendKey" data-key=",">,</button>
+            <button class="sendKey" data-key="0">0</button>
+            <button class="sendKey" data-key="delete">←</button>
+        </div>
+
+        <div id="sendAmountBottomActions">
+            <button id="sendAmountBackButton">‹</button>
+
+            <button id="sendAmountNextButton" disabled>
+                Weiter
+                <span>›</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="paymentMethodSheet">
+        <div class="sheetHandle" id="paymentMethodHandle"></div>
+
+        <h1>Wähle eine Zahlungsmethode</h1>
+
+        <section id="paymentMethodsList">
+            <div class="paymentMethodRow" id="applePayMethod">
+                <div class="paymentMethodIcon">
+                    <img src="assets/icons/applepay.png" alt="Apple Pay">
+                </div>
+
+                <div class="paymentMethodInfo">
+                    <h2>Apple Pay</h2>
+                    <p>Sofort</p>
+                </div>
+
+                <div class="paymentMethodFee">1 % Gebühr</div>
+            </div>
+
+            <div class="paymentMethodRow" id="bankTransferMethod">
+                <div class="paymentMethodIcon circleIcon">
+                    <img src="assets/icons/bank-transfer.png" alt="Überweisung">
+                </div>
+
+                <div class="paymentMethodInfo">
+                    <h2>Überweisung</h2>
+                    <p>Bis zu 3 Tagen</p>
+                </div>
+
+                <div class="paymentMethodFee">Kostenlos</div>
+            </div>
+        </section>
+    </div>
+
+    <div id="bankTransferInfoSheet">
+        <div class="sheetHandle" id="bankTransferInfoHandle"></div>
+
+        <h1>Überweise Geld auf dein Valora<span class="valoraxGreenX">X</span>-Konto</h1>
+
+        <section id="bankTransferDetails">
+            <div class="bankTransferRow">
+                <div>
+                    <h2>Name</h2>
+                    <p id="bankTransferName">Ali Osman Elci</p>
+                </div>
+
+                <button class="copyButton" data-copy="Ali Osman Elci" aria-label="Name kopieren"></button>
+            </div>
+
+            <div class="bankTransferRow">
+                <div>
+                    <h2>IBAN</h2>
+                    <p id="bankTransferIban">DE41 1001 2345 0588 2647 01</p>
+                </div>
+
+                <button class="copyButton" data-copy="DE41100123450588264701" aria-label="IBAN kopieren"></button>
+            </div>
+
+            <div class="bankTransferRow">
+                <div>
+                    <h2>BIC</h2>
+                    <p id="bankTransferBic">VLXRDEBBXXX</p>
+                </div>
+
+                <button class="copyButton" data-copy="VLXRDEBBXXX" aria-label="BIC kopieren"></button>
+            </div>
+        </section>
+
+        <p id="bankTransferNotice">
+            Dein Geld wird auf einem Treuhandsammelkonto bei Natixis S.A. <strong>verwahrt.</strong>
+            Bitte beachte, dass Überweisungen bis zu 1–2 Arbeitstage dauern können.
+        </p>
+
+        <p id="bankTransferHelpText">
+            Kontaktiere uns, wenn du <strong>Hilfe benötigst</strong>
+        </p>
+    </div>
+
+    <div id="allTransactionsSheet">
+        <div class="sheetHandle" id="allTransactionsHandle"></div>
+
+        <h1>Transaktionen</h1>
+        <p id="allTransactionsSubline">Alle Bewegungen</p>
+
+        <div id="allTransactionsList"></div>
+        <p id="emptyAllTransactions">Noch keine Transaktionen.</p>
+    </div>
+
+    <script src="assets.js"></script>
+    <script src="market.js"></script>
+    <script src="dashboard.js"></script>
+
+</body>
+</html>

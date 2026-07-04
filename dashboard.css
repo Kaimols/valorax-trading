@@ -1,0 +1,1713 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    --bg: #050505;
+    --card: #111111;
+    --card-light: #181818;
+    --text: #ffffff;
+    --muted: #666a73;
+    --muted-strong: #8e8e93;
+    --border: rgba(255, 255, 255, 0.08);
+    --red: #ef4444;
+    --green: #4ade80;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    overflow-x: hidden;
+}
+
+#app {
+    width: min(520px, 100%);
+    min-height: 100vh;
+    margin: 0 auto;
+    padding-bottom: 112px;
+    background: var(--bg);
+    position: relative;
+}
+
+header {
+    padding: 22px 20px 10px;
+    position: sticky;
+    top: 0;
+    background: rgba(5, 5, 5, 0.88);
+    backdrop-filter: blur(18px);
+    z-index: 20;
+}
+
+#topBar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#topTabs {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    background: transparent;
+    padding: 4px 0 2px;
+    border: none;
+}
+
+.topTab {
+    height: 42px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-size: 28px;
+    font-weight: 850;
+    letter-spacing: -1px;
+    cursor: pointer;
+    transition: 0.2s;
+    padding: 0;
+}
+
+.topTab.active {
+    color: white;
+}
+
+.topTab:active {
+    transform: scale(0.98);
+}
+
+#profileButton {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    background: #6b7280;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#profileButton:active {
+    transform: scale(0.96);
+}
+
+.profileIcon {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 3px solid #050505;
+    position: relative;
+    display: block;
+    margin-top: -8px;
+}
+
+.profileIcon::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -18px;
+    transform: translateX(-50%);
+    width: 26px;
+    height: 14px;
+    border: 3px solid #050505;
+    border-bottom: none;
+    border-radius: 18px 18px 0 0;
+}
+
+main {
+    padding: 8px 20px 22px;
+}
+
+.section {
+    display: none;
+    animation: fadeIn 0.25s ease forwards;
+}
+
+.section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#homeTop,
+#cashTop {
+    margin-top: 36px;
+}
+
+.amountLabel {
+    color: var(--muted);
+    font-size: 18px;
+    font-weight: 850;
+    letter-spacing: -0.3px;
+    margin-bottom: 10px;
+}
+
+#totalBalance,
+.cashNumber {
+    font-size: 45px;
+    font-weight: 900;
+    letter-spacing: -1.8px;
+    line-height: 1.05;
+}
+
+#portfolioCards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 44px;
+}
+
+.shortcutCard {
+    height: 104px;
+    border-radius: 25px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: white;
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    cursor: pointer;
+    text-align: left;
+    overflow: hidden;
+}
+
+.shortcutCard span {
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: -0.6px;
+}
+
+.shortcutCard strong {
+    font-size: 32px;
+    line-height: 1;
+    font-weight: 850;
+    color: var(--muted-strong);
+}
+
+.shortcutCard:active {
+    transform: scale(0.98);
+}
+
+#investmentsSection {
+    margin-top: 74px;
+}
+
+#investmentsHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+}
+
+#investmentsHeader h2 {
+    font-size: 23px;
+    font-weight: 900;
+    letter-spacing: -0.7px;
+}
+
+#splitLabel {
+    color: var(--muted);
+    font-size: 20px;
+    font-weight: 850;
+    user-select: none;
+}
+
+.investmentRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 34px;
+    transition: 0.2s;
+}
+
+.investmentRow h3 {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.6px;
+    margin-bottom: 8px;
+}
+
+.investmentRow p {
+    color: var(--muted);
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.investmentRight {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.investmentRight strong {
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.emptyCircle,
+.fullCircle {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.emptyCircle {
+    border: 6px solid rgba(255, 255, 255, 0.16);
+}
+
+.fullCircle {
+    border: 6px solid white;
+}
+
+.clickableRow {
+    cursor: pointer;
+}
+
+.clickableRow:active {
+    transform: scale(0.98);
+}
+
+.disabledInvestmentRow {
+    opacity: 0.38;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.disabledInvestmentRow h3,
+.disabledInvestmentRow p,
+.disabledInvestmentRow strong {
+    color: var(--muted);
+}
+
+#cashSection {
+    padding-top: 0;
+}
+
+#cashCards {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    margin-top: 44px;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+}
+
+#cashCards::-webkit-scrollbar {
+    display: none;
+}
+
+.cashShortcutCard {
+    min-width: 178px;
+    height: 104px;
+    border-radius: 25px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: white;
+    padding: 20px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.cashShortcutCard span {
+    display: block;
+    color: var(--muted);
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: -0.6px;
+    margin-bottom: 18px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cashShortcutCard strong {
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.cashShortcutCard:active {
+    transform: scale(0.98);
+}
+
+#transactionsSection {
+    margin-top: 74px;
+}
+
+#transactionsSection h2 {
+    font-size: 23px;
+    font-weight: 900;
+    letter-spacing: -0.7px;
+    margin-bottom: 36px;
+}
+
+#transactionsOpenButton {
+    cursor: pointer;
+}
+
+#transactionsSection h2 span {
+    color: var(--muted);
+    font-size: 30px;
+    vertical-align: -2px;
+}
+
+#transactionsList,
+#allTransactionsList {
+    display: grid;
+    gap: 0;
+}
+
+.transactionRow {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    align-items: center;
+    gap: 22px;
+    margin-bottom: 38px;
+}
+
+.transactionIcon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.transactionIcon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.logoBgWhite {
+    background: white !important;
+    color: black !important;
+}
+
+.logoBgBlack {
+    background: #000000 !important;
+    color: white !important;
+    border: 1px solid var(--border);
+}
+
+.logoBgGray {
+    background: #1d1d1f !important;
+    color: white !important;
+}
+
+.avatarIcon {
+    background: #1d1d1f;
+    color: var(--muted);
+    font-size: 17px;
+    font-weight: 900;
+}
+
+.transactionInfo h3 {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.6px;
+    margin-bottom: 7px;
+}
+
+.transactionInfo p {
+    color: var(--muted);
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.transactionAmount {
+    font-size: 22px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+#emptyTransactions,
+#emptyAllTransactions {
+    display: none;
+    color: var(--muted);
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.35;
+    margin-top: -10px;
+}
+
+#cashInfoText {
+    margin-top: 80px;
+    color: var(--muted);
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+#cashInfoText strong {
+    color: white;
+}
+
+.hiddenProfile {
+    display: none;
+}
+
+.profileCard {
+    margin-top: 22px;
+    padding: 20px;
+    border-radius: 24px;
+    background: var(--card);
+    border: 1px solid var(--border);
+}
+
+.profileRow {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.profileRow:last-child {
+    border-bottom: none;
+}
+
+.profileRow p {
+    color: var(--muted-strong);
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.profileRow strong {
+    font-size: 16px;
+}
+
+#logoutButton,
+#resetButton {
+    width: 100%;
+    height: 52px;
+    margin-top: 14px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 850;
+    cursor: pointer;
+}
+
+#logoutButton {
+    border: none;
+    background: white;
+    color: black;
+}
+
+#resetButton {
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    background: transparent;
+    color: var(--red);
+}
+
+#bottomActions {
+    position: fixed;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    width: min(520px, 100%);
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    z-index: 35;
+    pointer-events: none;
+}
+
+#bottomActions button {
+    height: 62px;
+    border-radius: 22px;
+    border: none;
+    background: #f2f2f2;
+    color: black;
+    font-size: 18px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.5);
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 22px;
+}
+
+#bottomActions button span {
+    font-size: 28px;
+    line-height: 1;
+    font-weight: 700;
+}
+
+#bottomActions button:active {
+    transform: scale(0.98);
+}
+
+#cashSheet {
+    position: fixed;
+    left: 50%;
+    bottom: -100%;
+    transform: translateX(-50%);
+    width: min(520px, 100%);
+    background: #0f0f0f;
+    border-radius: 28px 28px 0 0;
+    border: 1px solid var(--border);
+    padding: 18px 20px 26px;
+    transition: 0.28s ease;
+    box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.65);
+    z-index: 60;
+}
+
+#cashSheet.open {
+    bottom: 0;
+}
+
+#overlay,
+#orderOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: none;
+}
+
+#overlay {
+    z-index: 50;
+}
+
+#orderOverlay {
+    z-index: 70;
+}
+
+#overlay.open,
+#orderOverlay.open {
+    display: block;
+}
+
+#ordersSheet,
+#allTransactionsSheet,
+#savingsPlanSheet,
+#transferSheet,
+#paymentMethodSheet,
+#bankTransferInfoSheet,
+#newIbanSheet,
+#sendAmountSheet {
+    position: fixed;
+    left: 50%;
+    top: 0;
+    bottom: auto;
+    width: min(520px, 100%);
+    min-height: 100vh;
+    background: #050505;
+    border-radius: 0;
+    border: none;
+    padding: 18px 20px 150px;
+    transition: 0.28s ease;
+    box-shadow: none;
+    overflow-y: auto;
+}
+
+#ordersSheet {
+    transform: translateX(-50%) translateY(100%);
+    z-index: 80;
+}
+
+#allTransactionsSheet {
+    transform: translateX(-50%) translateY(100%);
+    z-index: 160;
+}
+
+#savingsPlanSheet {
+    transform: translateX(-50%) translateY(100%);
+    z-index: 170;
+    overflow-x: hidden;
+}
+
+#ordersSheet.open,
+#allTransactionsSheet.open,
+#savingsPlanSheet.open {
+    transform: translateX(-50%) translateY(0);
+}
+
+.sheetHandle {
+    width: 46px;
+    height: 5px;
+    border-radius: 99px;
+    background: #f2f2f2;
+    margin: 0 auto 18px;
+}
+
+#ordersSheet h1,
+#allTransactionsSheet h1,
+#savingsPlanSheet h1 {
+    font-size: 42px;
+    font-weight: 900;
+    letter-spacing: -1.4px;
+    margin-top: 14px;
+}
+
+#ordersSubline,
+#allTransactionsSubline,
+#savingsPlanSubtitle {
+    color: var(--muted);
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.7px;
+    margin-top: 10px;
+    margin-bottom: 44px;
+}
+
+#savingsPlanTabs {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-top: 38px;
+    margin-right: -20px;
+    padding-right: 20px;
+    padding-bottom: 4px;
+}
+
+#savingsPlanTabs::-webkit-scrollbar {
+    display: none;
+}
+
+.savingsPlanTab {
+    min-width: max-content;
+    height: 52px;
+    border-radius: 18px;
+    border: none;
+    background: #242426;
+    color: white;
+    font-size: 19px;
+    font-weight: 900;
+    padding: 0 24px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.savingsPlanTab.active {
+    background: #242426;
+    color: white;
+}
+
+.savingsPlanTab.disabled {
+    opacity: 1;
+}
+
+#savingsPlanHowItWorks {
+    margin-top: 54px;
+}
+
+#savingsPlanHowItWorks h2 {
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: -0.7px;
+    margin-bottom: 30px;
+}
+
+.savingsPlanStepRow {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.savingsPlanStepNumber {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: white;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 900;
+}
+
+.savingsPlanStepRow h3 {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.7px;
+    margin-bottom: 6px;
+}
+
+.savingsPlanStepRow p {
+    color: var(--muted);
+    font-size: 18px;
+    font-weight: 850;
+    line-height: 1.2;
+}
+
+#savingsPlanHelpText {
+    margin-top: 38px;
+    color: var(--muted);
+    font-size: 17px;
+    font-weight: 800;
+}
+
+#savingsPlanHelpText strong {
+    color: white;
+}
+
+#savingsPlanInvestButton {
+    position: fixed;
+    left: 50%;
+    bottom: 26px;
+    transform: translateX(8%);
+    width: 220px;
+    height: 76px;
+    border-radius: 24px;
+    border: none;
+    background: #f2f2f2;
+    color: black;
+    font-size: 21px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    z-index: 180;
+}
+
+#savingsPlanInvestButton span {
+    font-size: 34px;
+    line-height: 1;
+    font-weight: 900;
+}
+
+#savingsPlanInvestButton:active {
+    transform: translateX(8%) scale(0.98);
+}
+
+#orderCategoryTabs {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-top: 34px;
+    padding-bottom: 6px;
+}
+
+#orderCategoryTabs::-webkit-scrollbar {
+    display: none;
+}
+
+.orderCategory {
+    min-width: max-content;
+    height: 58px;
+    border-radius: 20px;
+    border: none;
+    background: #242426;
+    color: white;
+    font-size: 20px;
+    font-weight: 900;
+    padding: 0 26px;
+    cursor: pointer;
+}
+
+.orderCategory.active {
+    background: #242426;
+}
+
+#howItWorks {
+    margin-top: 42px;
+}
+
+#howItWorks h2 {
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: -0.7px;
+    margin-bottom: 30px;
+}
+
+.stepRow {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    align-items: center;
+    gap: 22px;
+    margin-bottom: 34px;
+}
+
+.stepNumber {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: white;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.stepRow h3 {
+    font-size: 23px;
+    font-weight: 900;
+    letter-spacing: -0.7px;
+    margin-bottom: 8px;
+}
+
+.stepRow p {
+    color: var(--muted);
+    font-size: 19px;
+    font-weight: 850;
+}
+
+#orderHelpText {
+    margin-top: 36px;
+    color: var(--muted);
+    font-size: 17px;
+    font-weight: 800;
+}
+
+#orderHelpText strong {
+    color: white;
+}
+
+#addOrderButton {
+    position: fixed;
+    left: 50%;
+    bottom: 26px;
+    transform: translateX(8%);
+    width: 220px;
+    height: 76px;
+    border-radius: 24px;
+    border: none;
+    background: #f2f2f2;
+    color: black;
+    font-size: 21px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    z-index: 95;
+}
+
+#addOrderButton span {
+    font-size: 34px;
+    line-height: 1;
+}
+
+.valoraxGreenX {
+    color: var(--green);
+}
+
+#transferSheet {
+    transform: translateX(-50%) translateY(100%);
+    z-index: 100;
+}
+
+#newIbanSheet {
+    transform: translateX(-50%) translateY(100%);
+    z-index: 115;
+}
+
+#paymentMethodSheet {
+    transform: translateX(-50%) translateY(100%);
+    z-index: 120;
+}
+
+#sendAmountSheet {
+    transform: translateX(-50%) translateY(100%);
+    z-index: 125;
+}
+
+#bankTransferInfoSheet {
+    transform: translateX(-50%) translateY(100%);
+    z-index: 140;
+}
+
+#transferSheet.open,
+#paymentMethodSheet.open,
+#bankTransferInfoSheet.open,
+#newIbanSheet.open,
+#sendAmountSheet.open {
+    transform: translateX(-50%) translateY(0);
+}
+
+#transferSheet h1 {
+    font-size: 43px;
+    font-weight: 950;
+    letter-spacing: -1.4px;
+    line-height: 1;
+    margin-top: 42px;
+}
+
+#transferActions {
+    margin-top: 82px;
+    display: grid;
+    gap: 52px;
+}
+
+.transferActionRow {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    align-items: center;
+    gap: 28px;
+    cursor: pointer;
+}
+
+.transferActionRow:active {
+    transform: scale(0.98);
+}
+
+.transferActionIcon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: white;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.transferActionIcon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 7px;
+    display: block;
+}
+
+.transferActionRow h2 {
+    font-size: 25px;
+    font-weight: 950;
+    letter-spacing: -0.7px;
+}
+
+#paymentMethodSheet h1 {
+    font-size: 43px;
+    font-weight: 950;
+    letter-spacing: -1.4px;
+    line-height: 1.05;
+    margin-top: 42px;
+    max-width: 390px;
+}
+
+#paymentMethodsList {
+    margin-top: 84px;
+    display: grid;
+    gap: 54px;
+}
+
+.paymentMethodRow {
+    display: grid;
+    grid-template-columns: 58px 1fr auto;
+    align-items: center;
+    gap: 26px;
+    cursor: pointer;
+}
+
+.paymentMethodRow:active {
+    transform: scale(0.98);
+}
+
+.paymentMethodIcon {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.paymentMethodIcon.circleIcon {
+    border-radius: 50%;
+    background: white;
+}
+
+.paymentMethodIcon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.paymentMethodIcon.circleIcon img {
+    padding: 7px;
+}
+
+.paymentMethodInfo h2 {
+    font-size: 25px;
+    font-weight: 950;
+    letter-spacing: -0.7px;
+    margin-bottom: 8px;
+}
+
+.paymentMethodInfo p {
+    color: var(--muted);
+    font-size: 21px;
+    font-weight: 850;
+}
+
+.paymentMethodFee {
+    color: var(--muted);
+    font-size: 21px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+#bankTransferInfoSheet h1 {
+    font-size: 43px;
+    font-weight: 950;
+    letter-spacing: -1.4px;
+    line-height: 1.14;
+    margin-top: 42px;
+    max-width: 430px;
+}
+
+#bankTransferDetails {
+    margin-top: 66px;
+    display: grid;
+    gap: 42px;
+}
+
+.bankTransferRow {
+    display: grid;
+    grid-template-columns: 1fr 42px;
+    align-items: center;
+    gap: 22px;
+}
+
+.bankTransferRow h2 {
+    font-size: 25px;
+    font-weight: 950;
+    letter-spacing: -0.7px;
+    margin-bottom: 10px;
+}
+
+.bankTransferRow p {
+    color: var(--muted);
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.6px;
+}
+
+.copyButton {
+    width: 42px;
+    height: 42px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+}
+
+.copyButton::before,
+.copyButton::after {
+    content: "";
+    position: absolute;
+    width: 19px;
+    height: 22px;
+    border: 3px solid white;
+    border-radius: 6px;
+}
+
+.copyButton::before {
+    left: 8px;
+    top: 11px;
+    opacity: 0.95;
+}
+
+.copyButton::after {
+    left: 15px;
+    top: 5px;
+    background: #050505;
+}
+
+.copyButton:active {
+    transform: scale(0.94);
+}
+
+#bankTransferNotice {
+    margin-top: 54px;
+    color: var(--muted);
+    font-size: 19px;
+    font-weight: 850;
+    line-height: 1.5;
+    max-width: 430px;
+}
+
+#bankTransferNotice strong {
+    color: white;
+}
+
+#bankTransferHelpText {
+    margin-top: 66px;
+    color: var(--muted);
+    font-size: 18px;
+    font-weight: 850;
+}
+
+#bankTransferHelpText strong {
+    color: white;
+}
+
+#cashSheetTitle {
+    font-size: 24px;
+    font-weight: 900;
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    color: var(--muted-strong);
+    font-size: 14px;
+    margin-bottom: 9px;
+}
+
+input {
+    width: 100%;
+    height: 58px;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    background: #171717;
+    color: white;
+    padding: 0 16px;
+    font-size: 22px;
+    font-weight: 800;
+    outline: none;
+    margin-bottom: 16px;
+}
+
+input:focus {
+    border-color: white;
+}
+
+#cashPreview {
+    padding: 14px 0;
+    color: var(--muted-strong);
+    font-size: 14px;
+    min-height: 46px;
+}
+
+#confirmCash {
+    width: 100%;
+    height: 56px;
+    border-radius: 999px;
+    border: none;
+    background: white;
+    color: black;
+    font-size: 17px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+#cashSheetMessage {
+    min-height: 22px;
+    margin-top: 14px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--red);
+}
+
+#newIbanUserIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #101010;
+    margin-top: 58px;
+    position: relative;
+}
+
+#newIbanUserIcon::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 13px;
+    transform: translateX(-50%);
+    width: 13px;
+    height: 13px;
+    border: 3px solid var(--muted);
+    border-radius: 50%;
+}
+
+#newIbanUserIcon::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 29px;
+    transform: translateX(-50%);
+    width: 21px;
+    height: 13px;
+    border: 3px solid var(--muted);
+    border-bottom: none;
+    border-radius: 16px 16px 0 0;
+}
+
+#newIbanSheet h1 {
+    font-size: 43px;
+    font-weight: 950;
+    letter-spacing: -1.5px;
+    line-height: 1;
+    margin-top: 30px;
+}
+
+#newIbanForm {
+    margin-top: 64px;
+    display: grid;
+    gap: 52px;
+}
+
+.newIbanInput {
+    width: 100% !important;
+    height: auto !important;
+    border: none !important;
+    background: transparent !important;
+    color: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    outline: none !important;
+    font-size: 34px !important;
+    font-weight: 950 !important;
+    letter-spacing: -1px !important;
+    border-radius: 0 !important;
+}
+
+.newIbanInput::placeholder {
+    color: rgba(102, 106, 115, 0.35);
+}
+
+.ibanInput {
+    font-size: 28px !important;
+    letter-spacing: -0.8px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#newIbanBottomActions,
+#sendAmountBottomActions {
+    position: fixed;
+    left: 50%;
+    bottom: 26px;
+    transform: translateX(-50%);
+    width: min(520px, 100%);
+    padding: 0 20px;
+    display: none;
+    grid-template-columns: 118px 220px;
+    justify-content: space-between;
+    gap: 18px;
+    pointer-events: none;
+}
+
+#newIbanBottomActions {
+    z-index: 118;
+}
+
+#sendAmountBottomActions {
+    z-index: 128;
+}
+
+#newIbanSheet.open #newIbanBottomActions,
+#sendAmountSheet.open #sendAmountBottomActions {
+    display: grid;
+}
+
+#newIbanBackButton,
+#newIbanNextButton,
+#sendAmountBackButton,
+#sendAmountNextButton {
+    height: 76px;
+    border-radius: 24px;
+    border: none;
+    font-size: 22px;
+    font-weight: 950;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+#newIbanBackButton,
+#sendAmountBackButton {
+    background: #111111;
+    color: white;
+    font-size: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#newIbanNextButton,
+#sendAmountNextButton {
+    background: #555555;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 34px;
+}
+
+#newIbanNextButton.isActive,
+#sendAmountNextButton.isActive {
+    background: white;
+    color: black;
+}
+
+#newIbanNextButton:disabled,
+#sendAmountNextButton:disabled {
+    cursor: default;
+}
+
+#newIbanNextButton span,
+#sendAmountNextButton span {
+    font-size: 36px;
+    line-height: 1;
+}
+
+#newIbanBackButton:active,
+#newIbanNextButton.isActive:active,
+#sendAmountBackButton:active,
+#sendAmountNextButton.isActive:active {
+    transform: scale(0.97);
+}
+
+#sendAmountSheet h1 {
+    font-size: 40px;
+    font-weight: 950;
+    letter-spacing: -1.4px;
+    line-height: 1.04;
+    margin-top: 58px;
+}
+
+#sendAvailableText {
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.7px;
+}
+
+#sendAmountDisplay {
+    margin-top: 78px;
+    text-align: center;
+    color: #242426;
+    font-size: 76px;
+    font-weight: 950;
+    letter-spacing: -3px;
+    line-height: 1;
+}
+
+#sendAmountDisplay.hasAmount {
+    color: white;
+}
+
+#sendAmountError {
+    height: 0;
+    margin-top: 0;
+    color: var(--red);
+    text-align: center;
+    font-size: 15px;
+    font-weight: 850;
+    line-height: 1.3;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: 0.2s ease;
+    pointer-events: none;
+}
+
+#sendAmountError.show {
+    opacity: 1;
+    transform: translateY(12px);
+}
+
+#sendAmountKeyboard {
+    margin-top: 34px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 28px;
+}
+
+.sendKey {
+    height: 44px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 42px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.sendKey:active {
+    transform: scale(0.92);
+}
+
+@media (min-width: 760px) {
+    body {
+        background:
+            radial-gradient(circle at top, rgba(34, 197, 94, 0.10), transparent 28%),
+            #000;
+    }
+
+    #app {
+        border-left: 1px solid var(--border);
+        border-right: 1px solid var(--border);
+    }
+}
+
+@media (max-width: 380px) {
+    .topTab {
+        font-size: 25px;
+    }
+
+    #totalBalance,
+    .cashNumber {
+        font-size: 40px;
+    }
+
+    #bottomActions button {
+        font-size: 16px;
+        padding: 0 18px;
+    }
+
+    .shortcutCard span,
+    .cashShortcutCard span {
+        font-size: 18px;
+    }
+
+    .investmentRow h3,
+    .transactionInfo h3 {
+        font-size: 20px;
+    }
+
+    .investmentRight strong,
+    .transactionAmount {
+        font-size: 20px;
+    }
+
+    .transactionInfo p {
+        font-size: 16px;
+    }
+
+    #ordersSheet h1,
+    #allTransactionsSheet h1,
+    #savingsPlanSheet h1 {
+        margin-top: 8px;
+        font-size: 40px;
+    }
+
+    #savingsPlanSubtitle {
+        font-size: 20px;
+    }
+
+    #savingsPlanTabs {
+    margin-top: 34px;
+    gap: 10px;
+}
+
+.savingsPlanTab {
+    height: 48px;
+    border-radius: 17px;
+    font-size: 18px;
+    padding: 0 22px;
+}
+
+#savingsPlanHowItWorks {
+    margin-top: 46px;
+}
+
+#savingsPlanHowItWorks h2 {
+    font-size: 23px;
+    margin-bottom: 26px;
+}
+
+.savingsPlanStepRow {
+    grid-template-columns: 40px 1fr;
+    gap: 16px;
+    margin-bottom: 26px;
+}
+
+.savingsPlanStepNumber {
+    width: 30px;
+    height: 30px;
+    font-size: 15px;
+}
+
+.savingsPlanStepRow h3 {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.savingsPlanStepRow p {
+    font-size: 16px;
+}
+
+#savingsPlanHelpText {
+    margin-top: 30px;
+}
+
+    #savingsPlanInvestButton {
+        width: 190px;
+        height: 68px;
+        font-size: 19px;
+    }
+
+    #orderCategoryTabs {
+        margin-top: 28px;
+    }
+
+    #howItWorks {
+        margin-top: 34px;
+    }
+
+    .stepRow {
+        margin-bottom: 30px;
+    }
+
+    #transferSheet h1,
+    #paymentMethodSheet h1 {
+        font-size: 40px;
+    }
+
+    #bankTransferInfoSheet h1 {
+        font-size: 39px;
+        margin-top: 36px;
+    }
+
+    .transferActionRow h2,
+    .paymentMethodInfo h2,
+    .bankTransferRow h2 {
+        font-size: 23px;
+    }
+
+    #transferActions {
+        margin-top: 72px;
+        gap: 46px;
+    }
+
+    #paymentMethodsList {
+        margin-top: 74px;
+        gap: 48px;
+    }
+
+    .paymentMethodRow {
+        grid-template-columns: 50px 1fr auto;
+        gap: 22px;
+    }
+
+    .paymentMethodInfo p,
+    .paymentMethodFee {
+        font-size: 19px;
+    }
+
+    #bankTransferDetails {
+        margin-top: 58px;
+        gap: 38px;
+    }
+
+    .bankTransferRow p {
+        font-size: 20px;
+    }
+
+    #newIbanUserIcon {
+        margin-top: 50px;
+    }
+
+    #newIbanSheet h1 {
+        font-size: 40px;
+    }
+
+    .newIbanInput {
+        font-size: 31px !important;
+    }
+
+    .ibanInput {
+        font-size: 25px !important;
+        letter-spacing: -0.7px !important;
+    }
+
+    #newIbanForm {
+        margin-top: 58px;
+        gap: 46px;
+    }
+
+    #newIbanBottomActions,
+    #sendAmountBottomActions {
+        grid-template-columns: 104px 190px;
+        justify-content: space-between;
+        gap: 14px;
+    }
+
+    #newIbanBackButton,
+    #newIbanNextButton,
+    #sendAmountBackButton,
+    #sendAmountNextButton {
+        height: 68px;
+        border-radius: 22px;
+    }
+
+    #newIbanBackButton,
+    #sendAmountBackButton {
+        font-size: 38px;
+    }
+
+    #newIbanNextButton,
+    #sendAmountNextButton {
+        font-size: 20px;
+        padding: 0 28px;
+    }
+
+    #sendAmountSheet h1 {
+        font-size: 38px;
+        margin-top: 50px;
+    }
+
+    #sendAvailableText {
+        font-size: 21px;
+    }
+
+    #sendAmountDisplay {
+        margin-top: 62px;
+        font-size: 70px;
+    }
+
+    #sendAmountError {
+        font-size: 14px;
+        transform: translateY(10px);
+    }
+
+    #sendAmountError.show {
+        transform: translateY(10px);
+    }
+
+    #sendAmountKeyboard {
+        margin-top: 28px;
+        row-gap: 24px;
+    }
+
+    .sendKey {
+        height: 40px;
+        font-size: 38px;
+    }
+
+    #addOrderButton {
+        width: 190px;
+        height: 68px;
+        font-size: 19px;
+    }
+}

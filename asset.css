@@ -1,0 +1,2758 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    --bg: #050505;
+    --text: #ffffff;
+    --muted: #666a73;
+    --muted-strong: #8e8e93;
+    --blue: #2f6fb8;
+    --blue-dark: #245f9f;
+    --red: #ef4444;
+    --green: #4ade80;
+    --border: rgba(255, 255, 255, 0.08);
+    --card: #111111;
+    --asset-accent: #245f9f;
+    --asset-action-text: #ffffff;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    overflow-x: hidden;
+}
+
+#app {
+    width: min(520px, 100%);
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 18px 20px 132px;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+}
+
+#handleWrap {
+    width: 56px;
+    height: 28px;
+    margin: 0 auto 44px;
+    cursor: pointer;
+    position: relative;
+}
+
+#handleWrap::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    width: 38px;
+    height: 6px;
+    border-radius: 99px;
+    background: rgba(255, 255, 255, 0.18);
+}
+
+#handleWrap::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 11px;
+    transform: translateX(-50%);
+    width: 56px;
+    height: 7px;
+    border-radius: 99px;
+    background: white;
+}
+
+#topRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 44px;
+}
+
+#assetIcon {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #1d1d1f;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-size: 26px;
+    font-weight: 950;
+}
+
+#assetIcon.logoBgWhite {
+    background: white;
+    color: black;
+}
+
+#assetIcon.logoBgBlack {
+    background: #000000;
+    color: white;
+    border: 1px solid var(--border);
+}
+
+#assetIcon.logoBgGray {
+    background: #1d1d1f;
+    color: white;
+}
+
+#assetIcon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
+
+#watchButton {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: #1d1d1f;
+    cursor: pointer;
+    position: relative;
+}
+
+#watchButton::before,
+#watchButton::after {
+    content: "";
+    position: absolute;
+    background: white;
+    border-radius: 99px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#watchButton::before {
+    width: 18px;
+    height: 4px;
+}
+
+#watchButton::after {
+    width: 4px;
+    height: 18px;
+}
+
+#watchButton.isActive {
+    background: var(--asset-accent);
+}
+
+#watchButton.isActive::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 46%;
+    width: 9px;
+    height: 18px;
+    background: transparent;
+    border-radius: 0;
+    border-right: 4px solid var(--asset-action-text);
+    border-bottom: 4px solid var(--asset-action-text);
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+#watchButton.isActive::after {
+    display: none;
+}
+
+#assetName {
+    color: var(--muted);
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: -0.7px;
+    margin-bottom: 8px;
+}
+
+#priceRow {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 76px;
+}
+
+#assetPrice {
+    font-size: 43px;
+    font-weight: 950;
+    letter-spacing: -1.6px;
+    line-height: 1;
+}
+
+#assetChange {
+    font-size: 22px;
+    font-weight: 950;
+    letter-spacing: -0.6px;
+}
+
+.positive {
+    color: var(--green);
+}
+
+.negative,
+.blueNegative {
+    color: var(--red);
+}
+
+.neutral {
+    color: var(--muted);
+}
+
+#positionCardsSection {
+    margin-top: 0;
+    margin-bottom: 78px;
+}
+
+#positionCards {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-right: -20px;
+    padding-right: 20px;
+}
+
+#positionCards::-webkit-scrollbar {
+    display: none;
+}
+
+.positionMiniCard {
+    min-width: 178px;
+    height: 104px;
+    border-radius: 24px;
+    background: var(--card);
+    padding: 24px 20px;
+    flex-shrink: 0;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+}
+
+.positionMiniCard span {
+    display: block;
+    color: var(--muted);
+    font-size: 22px;
+    font-weight: 950;
+    letter-spacing: -0.7px;
+    margin-bottom: 10px;
+}
+
+.positionMiniCard strong {
+    display: block;
+    color: white;
+    font-size: 22px;
+    font-weight: 950;
+    letter-spacing: -0.6px;
+}
+
+.positionMiniCard strong.positive {
+    color: var(--green);
+}
+
+.positionMiniCard strong.blueNegative {
+    color: var(--red);
+}
+
+.sectionTitle {
+    font-size: 26px;
+    font-weight: 950;
+    letter-spacing: -0.8px;
+    margin-bottom: 28px;
+}
+
+.sectionTitle span {
+    color: var(--muted);
+    font-size: 32px;
+    vertical-align: -2px;
+}
+
+#infoText {
+    font-size: 23px;
+    font-weight: 850;
+    letter-spacing: -0.6px;
+    line-height: 1.45;
+    margin-bottom: 78px;
+}
+
+#statsGrid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 24px;
+    row-gap: 30px;
+    align-items: center;
+}
+
+.statLabel {
+    color: var(--muted);
+    font-size: 23px;
+    font-weight: 950;
+    letter-spacing: -0.7px;
+}
+
+.statValue {
+    color: white;
+    font-size: 23px;
+    font-weight: 950;
+    text-align: right;
+    white-space: nowrap;
+}
+
+#priceAlarm {
+    margin-top: 34px;
+    color: var(--asset-accent);
+    font-size: 23px;
+    font-weight: 950;
+    letter-spacing: -0.7px;
+}
+
+#priceAlarm span {
+    font-size: 33px;
+    vertical-align: -3px;
+}
+
+#newsSection {
+    margin-top: 78px;
+}
+
+#newsTitle {
+    font-size: 26px;
+    font-weight: 950;
+    letter-spacing: -0.8px;
+    margin-bottom: 28px;
+}
+
+#newsTitle span {
+    color: var(--muted);
+    font-size: 32px;
+    vertical-align: -2px;
+}
+
+#newsHeadline {
+    font-size: 24px;
+    font-weight: 950;
+    letter-spacing: -0.7px;
+    line-height: 1.45;
+    margin-bottom: 28px;
+}
+
+#newsTime {
+    color: var(--muted);
+    font-size: 20px;
+    font-weight: 900;
+}
+
+#riskText {
+    margin-top: 88px;
+    color: var(--muted);
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.45;
+    padding-bottom: 28px;
+}
+
+#bottomActions {
+    position: fixed;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    width: min(520px, 100%);
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    z-index: 45;
+    pointer-events: none;
+}
+
+#bottomActions button {
+    height: 74px;
+    border-radius: 24px;
+    border: none;
+    background: var(--asset-accent);
+    color: var(--asset-action-text);
+    font-size: 22px;
+    font-weight: 950;
+    cursor: pointer;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+}
+
+#bottomActions button span {
+    font-size: 36px;
+    line-height: 1;
+    font-weight: 900;
+}
+
+#bottomActions button:active {
+    transform: scale(0.98);
+}
+
+.detailView {
+    position: fixed;
+    inset: 0;
+    width: min(520px, 100%);
+    margin: 0 auto;
+    background: #050505;
+    color: white;
+    z-index: 120;
+    padding: 18px 20px 40px;
+    transform: translateY(100%);
+    transition: 0.28s ease;
+    overflow-y: auto;
+}
+
+.detailView.open {
+    transform: translateY(0);
+}
+
+.detailHandle {
+    width: 56px;
+    height: 28px;
+    margin: 0 auto 32px;
+    cursor: pointer;
+    position: relative;
+}
+
+.detailHandle::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    width: 38px;
+    height: 6px;
+    border-radius: 99px;
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.detailHandle::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 11px;
+    transform: translateX(-50%);
+    width: 56px;
+    height: 7px;
+    border-radius: 99px;
+    background: white;
+}
+
+.detailView h1 {
+    font-size: 43px;
+    font-weight: 950;
+    letter-spacing: -1.4px;
+    line-height: 1;
+    margin-bottom: 24px;
+}
+
+.detailAssetName {
+    color: var(--muted);
+    font-size: 23px;
+    font-weight: 950;
+    letter-spacing: -0.7px;
+    margin-bottom: 98px;
+}
+
+.detailSection h2 {
+    font-size: 26px;
+    font-weight: 950;
+    letter-spacing: -0.8px;
+    margin-bottom: 46px;
+}
+
+.detailSection.second {
+    margin-top: 106px;
+}
+
+.detailRow {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: center;
+    margin-bottom: 42px;
+}
+
+.detailRow span {
+    color: var(--muted);
+    font-size: 25px;
+    font-weight: 950;
+    letter-spacing: -0.7px;
+}
+
+.detailRow span b {
+    color: var(--muted);
+    font-size: 34px;
+    vertical-align: -4px;
+}
+
+.detailRow strong {
+    color: white;
+    font-size: 25px;
+    font-weight: 950;
+    white-space: nowrap;
+}
+
+.detailRow strong.positive {
+    color: var(--green);
+}
+
+.detailRow strong.blueNegative {
+    color: var(--red);
+}
+
+#transactionsEmptyText {
+    color: var(--muted);
+    font-size: 24px;
+    font-weight: 950;
+    letter-spacing: -0.7px;
+}
+
+.detailHelpText {
+    margin-top: 106px;
+    color: var(--muted);
+    font-size: 18px;
+    font-weight: 850;
+}
+
+.detailHelpText strong {
+    color: white;
+}
+
+#overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: none;
+    z-index: 60;
+}
+
+#overlay.open {
+    display: block;
+}
+
+#orderSheet {
+    position: fixed;
+    left: 50%;
+    bottom: -100%;
+    transform: translateX(-50%);
+    width: min(520px, 100%);
+    background: #0f0f0f;
+    border-radius: 28px 28px 0 0;
+    border: 1px solid var(--border);
+    padding: 18px 20px 26px;
+    z-index: 70;
+    transition: 0.28s ease;
+    box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.65);
+}
+
+#orderSheet.open {
+    bottom: 0;
+}
+
+.sheetHandle {
+    width: 46px;
+    height: 5px;
+    border-radius: 99px;
+    background: #3a3a3a;
+    margin: 0 auto 18px;
+}
+
+#sheetTitle {
+    font-size: 26px;
+    font-weight: 950;
+    letter-spacing: -0.7px;
+    margin-bottom: 22px;
+}
+
+label {
+    display: block;
+    color: var(--muted-strong);
+    font-size: 14px;
+    margin-bottom: 9px;
+}
+
+input {
+    width: 100%;
+    height: 58px;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    background: #171717;
+    color: white;
+    padding: 0 16px;
+    font-size: 22px;
+    font-weight: 850;
+    outline: none;
+    margin-bottom: 16px;
+}
+
+input:focus {
+    border-color: white;
+}
+
+#orderPreview {
+    padding: 14px 0;
+    color: var(--muted-strong);
+    font-size: 14px;
+    min-height: 46px;
+    line-height: 1.4;
+}
+
+#confirmOrder {
+    width: 100%;
+    height: 56px;
+    border-radius: 999px;
+    border: none;
+    background: white;
+    color: black;
+    font-size: 17px;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+#orderMessage {
+    min-height: 22px;
+    margin-top: 14px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--red);
+}
+
+#buyFullSheet,
+#buyConfirmSheet,
+#sellAmountSheet,
+#sellConfirmSheet,
+#savingsAmountSheet,
+#savingsFrequencySheet,
+#savingsStartSheet,
+#savingsConfirmSheet {
+    position: fixed;
+    left: 50%;
+    top: 0;
+    bottom: auto;
+    transform: translateX(-50%) translateY(100%);
+    width: min(520px, 100%);
+    height: 100dvh;
+    min-height: 100dvh;
+    background: #050505;
+    color: white;
+    padding: 14px 20px 112px;
+    transition: 0.28s ease;
+    overflow: hidden;
+}
+
+#buyFullSheet {
+    z-index: 180;
+}
+
+#buyConfirmSheet {
+    z-index: 205;
+}
+
+#sellAmountSheet {
+    z-index: 260;
+}
+
+#sellConfirmSheet {
+    z-index: 280;
+}
+
+#savingsAmountSheet {
+    z-index: 300;
+}
+
+#savingsFrequencySheet {
+    z-index: 310;
+}
+
+#savingsStartSheet {
+    z-index: 320;
+}
+
+#savingsConfirmSheet {
+    z-index: 330;
+}
+
+#buyFullSheet.open,
+#buyConfirmSheet.open,
+#sellAmountSheet.open,
+#sellConfirmSheet.open,
+#savingsAmountSheet.open,
+#savingsFrequencySheet.open,
+#savingsStartSheet.open,
+#savingsConfirmSheet.open {
+    transform: translateX(-50%) translateY(0);
+}
+
+#buyFullHandle,
+#buyConfirmHandle,
+.sellFullHandle,
+.savingsFullHandle {
+    width: 56px;
+    height: 22px;
+    margin: 0 auto 28px;
+    cursor: pointer;
+    position: relative;
+}
+
+#buyFullHandle::before,
+#buyConfirmHandle::before,
+.sellFullHandle::before,
+.savingsFullHandle::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    width: 34px;
+    height: 5px;
+    border-radius: 99px;
+    background: rgba(255, 255, 255, 0.18);
+}
+
+#buyFullHandle::after,
+#buyConfirmHandle::after,
+.sellFullHandle::after,
+.savingsFullHandle::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 10px;
+    transform: translateX(-50%);
+    width: 52px;
+    height: 6px;
+    border-radius: 99px;
+    background: white;
+}
+
+#buyAssetIcon,
+#buyConfirmAssetIcon,
+#sellAmountAssetIcon,
+#sellConfirmAssetIcon,
+#savingsAmountAssetIcon,
+#savingsFrequencyAssetIcon,
+#savingsStartAssetIcon,
+#savingsConfirmAssetIcon {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: #1d1d1f;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-size: 20px;
+    font-weight: 950;
+    margin-top: 6px;
+}
+
+#buyAssetIcon.logoBgWhite,
+#buyConfirmAssetIcon.logoBgWhite,
+#sellAmountAssetIcon.logoBgWhite,
+#sellConfirmAssetIcon.logoBgWhite,
+#savingsAmountAssetIcon.logoBgWhite,
+#savingsFrequencyAssetIcon.logoBgWhite,
+#savingsStartAssetIcon.logoBgWhite,
+#savingsConfirmAssetIcon.logoBgWhite {
+    background: white;
+    color: black;
+}
+
+#buyAssetIcon.logoBgBlack,
+#buyConfirmAssetIcon.logoBgBlack,
+#sellAmountAssetIcon.logoBgBlack,
+#sellConfirmAssetIcon.logoBgBlack,
+#savingsAmountAssetIcon.logoBgBlack,
+#savingsFrequencyAssetIcon.logoBgBlack,
+#savingsStartAssetIcon.logoBgBlack,
+#savingsConfirmAssetIcon.logoBgBlack {
+    background: black;
+    color: white;
+    border: 1px solid var(--border);
+}
+
+#buyAssetIcon.logoBgGray,
+#buyConfirmAssetIcon.logoBgGray,
+#sellAmountAssetIcon.logoBgGray,
+#sellConfirmAssetIcon.logoBgGray,
+#savingsAmountAssetIcon.logoBgGray,
+#savingsFrequencyAssetIcon.logoBgGray,
+#savingsStartAssetIcon.logoBgGray,
+#savingsConfirmAssetIcon.logoBgGray {
+    background: #1d1d1f;
+    color: white;
+}
+
+#buyAssetIcon img,
+#buyConfirmAssetIcon img,
+#sellAmountAssetIcon img,
+#sellConfirmAssetIcon img,
+#savingsAmountAssetIcon img,
+#savingsFrequencyAssetIcon img,
+#savingsStartAssetIcon img,
+#savingsConfirmAssetIcon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
+
+#buyFullSheet h1,
+#buyConfirmSheet h1,
+#sellAmountSheet h1,
+#sellConfirmSheet h1,
+#savingsAmountSheet h1,
+#savingsFrequencySheet h1,
+#savingsStartSheet h1,
+#savingsConfirmSheet h1 {
+    font-size: 40px;
+    font-weight: 950;
+    letter-spacing: -1.5px;
+    line-height: 1.08;
+    margin-top: 28px;
+}
+
+#buyBalanceLine,
+#sellAmountOwnedLine {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 22px;
+    font-weight: 950;
+    letter-spacing: -0.8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#buyBalanceLine span,
+#sellAmountOwnedLine span {
+    font-size: 30px;
+    line-height: 1;
+    vertical-align: -2px;
+}
+
+#buyAmountDisplay,
+#sellAmountDisplay {
+    margin-top: 62px;
+    text-align: center;
+    color: #242426;
+    font-size: 72px;
+    font-weight: 950;
+    letter-spacing: -3px;
+    line-height: 1;
+}
+
+#savingsAmountDisplay {
+    margin-top: 108px;
+    text-align: center;
+    color: #242426;
+    font-size: 78px;
+    font-weight: 950;
+    letter-spacing: -3px;
+    line-height: 1;
+}
+
+#buyAmountDisplay.hasAmount,
+#sellAmountDisplay.hasAmount,
+#savingsAmountDisplay.hasAmount {
+    color: white;
+}
+
+#buyPriceLine,
+#sellAmountPriceLine {
+    margin-top: 12px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: -0.6px;
+}
+
+#buyOrderError,
+#buyConfirmError,
+#sellAmountError,
+#savingsAmountError {
+    height: 0;
+    margin-top: 0;
+    color: var(--red);
+    text-align: center;
+    font-size: 14px;
+    font-weight: 850;
+    line-height: 1.3;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: 0.2s ease;
+    pointer-events: none;
+}
+
+#buyOrderError.show,
+#buyConfirmError.show,
+#sellAmountError.show,
+#savingsAmountError.show {
+    opacity: 1;
+}
+
+#buyKeyboard,
+#sellAmountKeyboard {
+    margin-top: 44px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 24px;
+}
+
+#savingsAmountKeyboard {
+    margin-top: 78px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 32px;
+}
+
+.buyKey,
+.sellKey,
+.savingsKey {
+    height: 38px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 40px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.savingsKey {
+    height: 42px;
+    font-size: 42px;
+}
+
+.savingsKeyEmpty {
+    pointer-events: none;
+}
+
+.buyKey:active,
+.sellKey:active,
+.savingsKey:active {
+    transform: scale(0.92);
+}
+
+#buyBottomActions,
+#buyConfirmBottomActions,
+#sellAmountBottomActions,
+#sellConfirmBottomActions,
+#savingsAmountBottomActions,
+#savingsFrequencyBottomActions,
+#savingsStartBottomActions,
+#savingsConfirmBottomActions {
+    position: fixed;
+    left: 50%;
+    bottom: 14px;
+    transform: translateX(-50%);
+    width: min(520px, 100%);
+    padding: 0 20px;
+    display: none;
+    justify-content: space-between;
+    gap: 14px;
+    pointer-events: none;
+}
+
+#buyBottomActions {
+    grid-template-columns: 132px 190px;
+    z-index: 190;
+}
+
+#buyConfirmBottomActions {
+    grid-template-columns: 118px 220px;
+    z-index: 215;
+}
+
+#sellAmountBottomActions {
+    grid-template-columns: 132px 190px;
+    z-index: 270;
+}
+
+#sellConfirmBottomActions {
+    z-index: 290;
+    grid-template-columns: 118px 220px;
+}
+
+#savingsAmountBottomActions {
+    z-index: 305;
+    grid-template-columns: 118px 220px;
+}
+
+#savingsFrequencyBottomActions {
+    z-index: 315;
+    grid-template-columns: 118px;
+}
+
+#savingsStartBottomActions {
+    z-index: 325;
+    grid-template-columns: 118px;
+}
+
+#savingsConfirmBottomActions {
+    z-index: 335;
+    grid-template-columns: 118px 220px;
+}
+
+#buyFullSheet.open #buyBottomActions,
+#buyConfirmSheet.open #buyConfirmBottomActions,
+#sellAmountSheet.open #sellAmountBottomActions,
+#sellConfirmSheet.open #sellConfirmBottomActions,
+#savingsAmountSheet.open #savingsAmountBottomActions,
+#savingsFrequencySheet.open #savingsFrequencyBottomActions,
+#savingsStartSheet.open #savingsStartBottomActions,
+#savingsConfirmSheet.open #savingsConfirmBottomActions {
+    display: grid;
+}
+
+#buyModeButton,
+#buyNextButton,
+#buyConfirmBackButton,
+#buyConfirmButton,
+#sellAmountModeButton,
+#sellAmountNextButton,
+#sellConfirmBackButton,
+#sellConfirmButton,
+#savingsAmountBackButton,
+#savingsAmountNextButton,
+#savingsFrequencyBackButton,
+#savingsStartBackButton,
+#savingsConfirmBackButton,
+#savingsConfirmCreateButton {
+    height: 62px;
+    border-radius: 21px;
+    border: none;
+    font-size: 20px;
+    font-weight: 950;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+#buyModeButton,
+#sellAmountModeButton {
+    background: transparent;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+#buyModeButton span,
+#sellAmountModeButton span {
+    width: 9px;
+    height: 9px;
+    border-right: 3px solid white;
+    border-bottom: 3px solid white;
+    transform: rotate(45deg) translateY(-4px);
+    display: inline-block;
+}
+
+#buyConfirmBackButton,
+#sellConfirmBackButton,
+#savingsAmountBackButton,
+#savingsFrequencyBackButton,
+#savingsStartBackButton,
+#savingsConfirmBackButton {
+    background: #111111;
+    color: white;
+    font-size: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#buyNextButton,
+#buyConfirmButton,
+#sellAmountNextButton,
+#sellConfirmButton,
+#savingsAmountNextButton,
+#savingsConfirmCreateButton {
+    background: var(--asset-accent);
+    color: var(--asset-action-text);
+    opacity: 0.38;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+}
+
+#buyConfirmButton,
+#savingsConfirmCreateButton {
+    opacity: 1;
+}
+
+#buyNextButton.isActive,
+#buyConfirmButton.isActive,
+#sellAmountNextButton.isActive,
+#sellConfirmButton.isActive,
+#savingsAmountNextButton.isActive,
+#savingsConfirmCreateButton.isActive {
+    opacity: 1;
+}
+
+#buyNextButton:disabled,
+#buyConfirmButton:disabled,
+#sellAmountNextButton:disabled,
+#sellConfirmButton:disabled,
+#savingsAmountNextButton:disabled,
+#savingsConfirmCreateButton:disabled {
+    cursor: default;
+}
+
+#buyNextButton span,
+#buyConfirmButton span,
+#sellAmountNextButton span,
+#sellConfirmButton span,
+#savingsAmountNextButton span,
+#savingsConfirmCreateButton span {
+    font-size: 32px;
+    line-height: 1;
+}
+
+#buyModeButton:active,
+#buyNextButton.isActive:active,
+#buyConfirmBackButton:active,
+#buyConfirmButton.isActive:active,
+#sellAmountModeButton:active,
+#sellAmountNextButton.isActive:active,
+#sellConfirmBackButton:active,
+#sellConfirmButton.isActive:active,
+#savingsAmountBackButton:active,
+#savingsAmountNextButton.isActive:active,
+#savingsFrequencyBackButton:active,
+#savingsStartBackButton:active,
+#savingsConfirmBackButton:active,
+#savingsConfirmCreateButton.isActive:active {
+    transform: scale(0.97);
+}
+
+#buyConfirmDetails,
+#sellConfirmDetails,
+#savingsConfirmDetails {
+    margin-top: 72px;
+    display: grid;
+    gap: 34px;
+}
+
+.buyConfirmRow,
+.sellConfirmRow,
+.savingsConfirmRow {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 22px;
+}
+
+.buyConfirmRow span,
+.sellConfirmRow span,
+.savingsConfirmRow span {
+    color: var(--muted);
+    font-size: 24px;
+    font-weight: 950;
+    letter-spacing: -0.7px;
+}
+
+.savingsConfirmRow span b {
+    color: var(--muted);
+    font-size: 30px;
+    vertical-align: -3px;
+}
+
+.buyConfirmRow strong,
+.sellConfirmRow strong,
+.savingsConfirmRow strong {
+    color: white;
+    font-size: 24px;
+    font-weight: 950;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.buyConfirmRow small,
+.sellConfirmRow small {
+    color: var(--muted);
+    font-size: 23px;
+    font-weight: 950;
+}
+
+#buyConfirmInfoText,
+#sellCostInfoText,
+#savingsConfirmInfoText {
+    margin-top: 86px;
+    color: var(--muted);
+    font-size: 17px;
+    font-weight: 850;
+    line-height: 1.4;
+}
+
+#buyConfirmInfoText strong,
+#sellCostInfoText strong,
+#savingsConfirmInfoText strong {
+    color: white;
+}
+
+#savingsFrequencySheet,
+#savingsStartSheet {
+    padding-top: 14px;
+    padding-bottom: 98px;
+}
+
+.savingsChoiceList {
+    margin-top: 74px;
+    display: grid;
+    gap: 54px;
+}
+
+.savingsChoiceRow {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: white;
+    display: grid;
+    grid-template-columns: 58px 1fr auto;
+    align-items: center;
+    gap: 26px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.savingsChoiceRow:active {
+    transform: scale(0.98);
+}
+
+.savingsChoiceRow strong {
+    font-size: 25px;
+    font-weight: 950;
+    letter-spacing: -0.7px;
+}
+
+.savingsChoiceRow small {
+    display: block;
+    color: var(--muted);
+    font-size: 20px;
+    font-weight: 900;
+    margin-top: 8px;
+    letter-spacing: -0.5px;
+}
+
+.savingsChoiceArrow {
+    color: var(--muted);
+    font-size: 45px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.savingsCalendarIcon {
+    width: 38px;
+    height: 38px;
+    border: 4px solid white;
+    border-radius: 8px;
+    position: relative;
+    display: inline-block;
+}
+
+.savingsCalendarIcon::before,
+.savingsCalendarIcon::after {
+    content: "";
+    position: absolute;
+    top: -8px;
+    width: 5px;
+    height: 12px;
+    border-radius: 99px;
+    background: white;
+}
+
+.savingsCalendarIcon::before {
+    left: 7px;
+}
+
+.savingsCalendarIcon::after {
+    right: 7px;
+}
+
+#savingsConfirmSheet {
+    padding-top: 12px;
+    padding-bottom: 98px;
+}
+
+#savingsConfirmSheet h1 {
+    font-size: 34px;
+    line-height: 1.12;
+    margin-top: 22px;
+    max-width: 430px;
+}
+
+#savingsConfirmDetails {
+    margin-top: 52px;
+    gap: 26px;
+}
+
+.savingsConfirmRow {
+    gap: 18px;
+}
+
+.savingsConfirmRow span {
+    font-size: 22px;
+}
+
+.savingsConfirmRow strong {
+    font-size: 22px;
+}
+
+#savingsConfirmInfoText {
+    margin-top: 54px;
+    font-size: 16px;
+    line-height: 1.35;
+}
+
+#savingsConfirmCreateButton {
+    background: var(--asset-accent);
+    color: var(--asset-action-text);
+}
+
+#buyTypeOverlay,
+#tradeActionsOverlay,
+#sellOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.62);
+    display: none;
+}
+
+#buyTypeOverlay {
+    z-index: 220;
+}
+
+#tradeActionsOverlay {
+    z-index: 210;
+}
+
+#sellOverlay {
+    z-index: 240;
+}
+
+#buyTypeOverlay.open,
+#tradeActionsOverlay.open,
+#sellOverlay.open {
+    display: block;
+}
+
+#buyTypeSheet {
+    position: fixed;
+    left: 50%;
+    bottom: -100%;
+    transform: translateX(-50%);
+    width: min(480px, calc(100% - 40px));
+    background: #111111;
+    border-radius: 34px;
+    padding: 20px 34px 46px;
+    z-index: 230;
+    transition: 0.28s ease;
+}
+
+#buyTypeSheet.open {
+    bottom: 18px;
+}
+
+#buyTypeHandle {
+    width: 56px;
+    height: 7px;
+    border-radius: 999px;
+    background: white;
+    margin: 0 auto 44px;
+    cursor: pointer;
+}
+
+#buyTypeTitle {
+    font-size: 42px;
+    font-weight: 950;
+    letter-spacing: -1.4px;
+    line-height: 1;
+    margin-bottom: 54px;
+}
+
+#buyTypeList {
+    display: grid;
+    gap: 50px;
+}
+
+.buyTypeOption {
+    display: grid;
+    grid-template-columns: 52px 1fr 36px;
+    align-items: center;
+    gap: 24px;
+    cursor: pointer;
+}
+
+.buyTypeOption:active {
+    transform: scale(0.98);
+}
+
+.buyTypeIcon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: white;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 950;
+    flex-shrink: 0;
+}
+
+.buyTypeInfo h3 {
+    font-size: 25px;
+    font-weight: 950;
+    letter-spacing: -0.7px;
+    margin-bottom: 10px;
+}
+
+.buyTypeInfo p {
+    color: var(--muted);
+    font-size: 21px;
+    font-weight: 850;
+    line-height: 1.45;
+    letter-spacing: -0.5px;
+}
+
+.buyTypeCheck {
+    width: 28px;
+    height: 28px;
+    position: relative;
+    opacity: 0;
+}
+
+.buyTypeOption.selected .buyTypeCheck {
+    opacity: 1;
+}
+
+.buyTypeCheck::after {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 1px;
+    width: 10px;
+    height: 20px;
+    border-right: 4px solid white;
+    border-bottom: 4px solid white;
+    transform: rotate(45deg);
+}
+
+#tradeActionsPanel {
+    position: fixed;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    width: min(520px, 100%);
+    padding: 0 20px;
+    z-index: 220;
+    display: none;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    justify-items: end;
+    pointer-events: none;
+}
+
+#tradeActionsPanel.open {
+    display: grid;
+}
+
+.tradeActionButton {
+    width: 220px;
+    height: 76px;
+    border-radius: 24px;
+    border: none;
+    background: var(--asset-accent);
+    color: var(--asset-action-text);
+    font-size: 22px;
+    font-weight: 950;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    pointer-events: auto;
+}
+
+.tradeActionButton span {
+    font-size: 38px;
+    line-height: 1;
+    font-weight: 900;
+}
+
+.tradeActionButton:active {
+    transform: scale(0.97);
+}
+
+#closeTradeActionsButton {
+    width: 76px;
+    height: 76px;
+    border-radius: 24px;
+    border: none;
+    background: #111111;
+    color: white;
+    font-size: 38px;
+    font-weight: 950;
+    cursor: pointer;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#closeTradeActionsButton:active {
+    transform: scale(0.97);
+}
+
+#sellSheet {
+    position: fixed;
+    left: 50%;
+    bottom: -100%;
+    transform: translateX(-50%);
+    width: min(480px, calc(100% - 40px));
+    background: #111111;
+    border-radius: 34px;
+    padding: 20px 34px 42px;
+    z-index: 250;
+    transition: 0.28s ease;
+}
+
+#sellSheet.open {
+    bottom: 18px;
+}
+
+#sellHandle {
+    width: 56px;
+    height: 7px;
+    border-radius: 999px;
+    background: white;
+    margin: 0 auto 44px;
+    cursor: pointer;
+}
+
+#sellSheet h1 {
+    font-size: 43px;
+    font-weight: 950;
+    letter-spacing: -1.5px;
+    line-height: 1;
+    margin-bottom: 18px;
+}
+
+#sellOwnedLine {
+    color: var(--muted);
+    font-size: 23px;
+    font-weight: 950;
+    letter-spacing: -0.8px;
+    margin-bottom: 54px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#sellOwnedLine span {
+    font-size: 34px;
+    line-height: 1;
+}
+
+#sellQuickGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.sellQuickButton {
+    height: 82px;
+    border-radius: 22px;
+    border: none;
+    background: #242426;
+    color: white;
+    font-size: 25px;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.sellQuickButton:active {
+    transform: scale(0.97);
+}
+
+@media (min-width: 760px) {
+    body {
+        background:
+            radial-gradient(circle at top, rgba(47, 111, 184, 0.10), transparent 28%),
+            #000;
+    }
+
+    #app {
+        border-left: 1px solid var(--border);
+        border-right: 1px solid var(--border);
+    }
+}
+
+@media (max-width: 390px) {
+    #assetPrice {
+        font-size: 39px;
+    }
+
+    #assetChange {
+        font-size: 20px;
+    }
+
+    #bottomActions button {
+        font-size: 20px;
+        padding: 0 22px;
+    }
+
+    #infoText {
+        font-size: 21px;
+    }
+
+    .statLabel,
+    .statValue {
+        font-size: 21px;
+    }
+
+    .positionMiniCard {
+        min-width: 168px;
+    }
+
+    .positionMiniCard span,
+    .positionMiniCard strong {
+        font-size: 20px;
+    }
+
+    .detailRow span,
+    .detailRow strong {
+        font-size: 22px;
+    }
+
+    #buyAssetIcon,
+    #buyConfirmAssetIcon,
+    #sellAmountAssetIcon,
+    #sellConfirmAssetIcon,
+    #savingsAmountAssetIcon,
+    #savingsFrequencyAssetIcon,
+    #savingsStartAssetIcon,
+    #savingsConfirmAssetIcon {
+        width: 42px;
+        height: 42px;
+    }
+
+    #buyFullSheet h1,
+    #buyConfirmSheet h1,
+    #sellAmountSheet h1,
+    #sellConfirmSheet h1,
+    #savingsAmountSheet h1,
+    #savingsFrequencySheet h1,
+    #savingsStartSheet h1 {
+        font-size: 38px;
+        margin-top: 24px;
+    }
+
+    #savingsConfirmSheet h1 {
+        font-size: 32px;
+        margin-top: 18px;
+    }
+
+    #buyBalanceLine,
+    #sellAmountOwnedLine {
+        font-size: 20px;
+    }
+
+    #buyAmountDisplay,
+    #sellAmountDisplay {
+        margin-top: 48px;
+        font-size: 66px;
+    }
+
+    #savingsAmountDisplay {
+        margin-top: 92px;
+        font-size: 70px;
+    }
+
+    #buyPriceLine,
+    #sellAmountPriceLine {
+        font-size: 17px;
+    }
+
+    #buyKeyboard,
+    #sellAmountKeyboard {
+        margin-top: 34px;
+        row-gap: 20px;
+    }
+
+    #savingsAmountKeyboard {
+        margin-top: 64px;
+        row-gap: 28px;
+    }
+
+    .buyKey,
+    .sellKey {
+        height: 36px;
+        font-size: 37px;
+    }
+
+    .savingsKey {
+        height: 38px;
+        font-size: 38px;
+    }
+
+    #buyBottomActions,
+    #sellAmountBottomActions {
+        grid-template-columns: 116px 176px;
+        gap: 14px;
+        bottom: 14px;
+    }
+
+    #buyConfirmBottomActions,
+    #sellConfirmBottomActions,
+    #savingsAmountBottomActions,
+    #savingsConfirmBottomActions {
+        grid-template-columns: 104px 190px;
+        bottom: 14px;
+    }
+
+    #savingsFrequencyBottomActions,
+    #savingsStartBottomActions {
+        grid-template-columns: 104px;
+        bottom: 14px;
+    }
+
+    #buyModeButton,
+    #buyNextButton,
+    #buyConfirmBackButton,
+    #buyConfirmButton,
+    #sellAmountModeButton,
+    #sellAmountNextButton,
+    #sellConfirmBackButton,
+    #sellConfirmButton,
+    #savingsAmountBackButton,
+    #savingsAmountNextButton,
+    #savingsFrequencyBackButton,
+    #savingsStartBackButton,
+    #savingsConfirmBackButton,
+    #savingsConfirmCreateButton {
+        height: 60px;
+        border-radius: 20px;
+        font-size: 18px;
+    }
+
+    #buyNextButton,
+    #buyConfirmButton,
+    #sellAmountNextButton,
+    #sellConfirmButton,
+    #savingsAmountNextButton,
+    #savingsConfirmCreateButton {
+        padding: 0 24px;
+    }
+
+    #buyTypeSheet,
+    #sellSheet {
+        width: calc(100% - 34px);
+        padding: 18px 30px 42px;
+        border-radius: 32px;
+    }
+
+    #buyTypeHandle,
+    #sellHandle {
+        margin-bottom: 38px;
+    }
+
+    #buyTypeTitle {
+        font-size: 38px;
+        margin-bottom: 46px;
+    }
+
+    #buyTypeList {
+        gap: 44px;
+    }
+
+    .buyTypeOption {
+        grid-template-columns: 48px 1fr 32px;
+        gap: 20px;
+    }
+
+    .buyTypeInfo h3 {
+        font-size: 23px;
+    }
+
+    .buyTypeInfo p {
+        font-size: 19px;
+    }
+
+    .tradeActionButton {
+        width: 190px;
+        height: 68px;
+        border-radius: 22px;
+        font-size: 20px;
+        padding: 0 24px;
+    }
+
+    #closeTradeActionsButton {
+        width: 68px;
+        height: 68px;
+        border-radius: 22px;
+        font-size: 34px;
+    }
+
+    #sellSheet h1 {
+        font-size: 39px;
+    }
+
+    #sellOwnedLine {
+        font-size: 21px;
+        margin-bottom: 46px;
+    }
+
+    #sellQuickGrid {
+        gap: 14px;
+    }
+
+    .sellQuickButton {
+        height: 74px;
+        border-radius: 20px;
+        font-size: 23px;
+    }
+
+    #buyConfirmDetails,
+    #sellConfirmDetails {
+        margin-top: 60px;
+        gap: 30px;
+    }
+
+    #savingsConfirmDetails {
+        margin-top: 42px;
+        gap: 22px;
+    }
+
+    .buyConfirmRow span,
+    .buyConfirmRow strong,
+    .sellConfirmRow span,
+    .sellConfirmRow strong {
+        font-size: 22px;
+    }
+
+    .savingsConfirmRow span,
+    .savingsConfirmRow strong {
+        font-size: 20px;
+    }
+
+    .buyConfirmRow small,
+    .sellConfirmRow small {
+        font-size: 21px;
+    }
+
+    .savingsChoiceList {
+        margin-top: 66px;
+        gap: 46px;
+    }
+
+    .savingsChoiceRow {
+        grid-template-columns: 52px 1fr auto;
+        gap: 22px;
+    }
+
+    .savingsChoiceRow strong {
+        font-size: 23px;
+    }
+
+    .savingsChoiceRow small {
+        font-size: 18px;
+    }
+
+    #savingsConfirmInfoText {
+        margin-top: 38px;
+        font-size: 15px;
+    }
+}
+
+@media (max-height: 760px) {
+    #buyFullSheet,
+    #buyConfirmSheet,
+    #sellAmountSheet,
+    #sellConfirmSheet,
+    #savingsAmountSheet,
+    #savingsFrequencySheet,
+    #savingsStartSheet,
+    #savingsConfirmSheet {
+        padding-top: 12px;
+        padding-bottom: 92px;
+    }
+
+    #buyFullHandle,
+    #buyConfirmHandle,
+    .sellFullHandle,
+    .savingsFullHandle {
+        height: 20px;
+        margin-bottom: 20px;
+    }
+
+    #buyAssetIcon,
+    #buyConfirmAssetIcon,
+    #sellAmountAssetIcon,
+    #sellConfirmAssetIcon,
+    #savingsAmountAssetIcon,
+    #savingsFrequencyAssetIcon,
+    #savingsStartAssetIcon,
+    #savingsConfirmAssetIcon {
+        width: 40px;
+        height: 40px;
+        margin-top: 2px;
+    }
+
+    #buyFullSheet h1,
+    #buyConfirmSheet h1,
+    #sellAmountSheet h1,
+    #sellConfirmSheet h1,
+    #savingsAmountSheet h1,
+    #savingsFrequencySheet h1,
+    #savingsStartSheet h1 {
+        font-size: 36px;
+        margin-top: 18px;
+    }
+
+    #savingsConfirmSheet h1 {
+        font-size: 30px;
+        margin-top: 14px;
+    }
+
+    #buyBalanceLine,
+    #sellAmountOwnedLine {
+        margin-top: 8px;
+        font-size: 20px;
+    }
+
+    #buyAmountDisplay,
+    #sellAmountDisplay {
+        margin-top: 40px;
+        font-size: 64px;
+    }
+
+    #savingsAmountDisplay {
+        margin-top: 70px;
+        font-size: 64px;
+    }
+
+    #buyPriceLine,
+    #sellAmountPriceLine {
+        margin-top: 10px;
+        font-size: 16px;
+    }
+
+    #buyKeyboard,
+    #sellAmountKeyboard {
+        margin-top: 30px;
+        row-gap: 18px;
+    }
+
+    #savingsAmountKeyboard {
+        margin-top: 46px;
+        row-gap: 20px;
+    }
+
+    .buyKey,
+    .sellKey {
+        height: 34px;
+        font-size: 36px;
+    }
+
+    .savingsKey {
+        height: 32px;
+        font-size: 34px;
+    }
+
+    #buyBottomActions,
+    #buyConfirmBottomActions,
+    #sellAmountBottomActions,
+    #sellConfirmBottomActions,
+    #savingsAmountBottomActions,
+    #savingsFrequencyBottomActions,
+    #savingsStartBottomActions,
+    #savingsConfirmBottomActions {
+        bottom: 10px;
+    }
+
+    #buyModeButton,
+    #buyNextButton,
+    #buyConfirmBackButton,
+    #buyConfirmButton,
+    #sellAmountModeButton,
+    #sellAmountNextButton,
+    #sellConfirmBackButton,
+    #sellConfirmButton,
+    #savingsAmountBackButton,
+    #savingsAmountNextButton,
+    #savingsFrequencyBackButton,
+    #savingsStartBackButton,
+    #savingsConfirmBackButton,
+    #savingsConfirmCreateButton {
+        height: 56px;
+        border-radius: 18px;
+        font-size: 17px;
+    }
+
+    #buyConfirmDetails,
+    #sellConfirmDetails {
+        margin-top: 52px;
+        gap: 26px;
+    }
+
+    #savingsConfirmDetails {
+        margin-top: 30px;
+        gap: 17px;
+    }
+
+    .savingsConfirmRow span,
+    .savingsConfirmRow strong {
+        font-size: 18px;
+    }
+
+    #buyConfirmInfoText,
+    #sellCostInfoText {
+        margin-top: 62px;
+    }
+
+    #savingsConfirmInfoText {
+        margin-top: 26px;
+        font-size: 14px;
+        line-height: 1.32;
+    }
+
+    .savingsChoiceList {
+        margin-top: 52px;
+        gap: 36px;
+    }
+}
+
+@media (max-height: 690px) {
+    #buyFullSheet,
+    #buyConfirmSheet,
+    #sellAmountSheet,
+    #sellConfirmSheet,
+    #savingsAmountSheet,
+    #savingsFrequencySheet,
+    #savingsStartSheet,
+    #savingsConfirmSheet {
+        padding-top: 10px;
+        padding-bottom: 78px;
+    }
+
+    #buyFullHandle,
+    #buyConfirmHandle,
+    .sellFullHandle,
+    .savingsFullHandle {
+        height: 18px;
+        margin-bottom: 14px;
+    }
+
+    #buyAssetIcon,
+    #buyConfirmAssetIcon,
+    #sellAmountAssetIcon,
+    #sellConfirmAssetIcon,
+    #savingsAmountAssetIcon,
+    #savingsFrequencyAssetIcon,
+    #savingsStartAssetIcon,
+    #savingsConfirmAssetIcon {
+        width: 34px;
+        height: 34px;
+    }
+
+    #buyFullSheet h1,
+    #buyConfirmSheet h1,
+    #sellAmountSheet h1,
+    #sellConfirmSheet h1,
+    #savingsAmountSheet h1,
+    #savingsFrequencySheet h1,
+    #savingsStartSheet h1 {
+        font-size: 32px;
+        margin-top: 14px;
+    }
+
+    #savingsConfirmSheet h1 {
+        font-size: 27px;
+        margin-top: 10px;
+    }
+
+    #buyBalanceLine,
+    #sellAmountOwnedLine {
+        font-size: 18px;
+    }
+
+    #buyAmountDisplay,
+    #sellAmountDisplay {
+        margin-top: 24px;
+        font-size: 56px;
+    }
+
+    #savingsAmountDisplay {
+        margin-top: 44px;
+        font-size: 52px;
+    }
+
+    #buyPriceLine,
+    #sellAmountPriceLine {
+        font-size: 15px;
+    }
+
+    #buyKeyboard,
+    #sellAmountKeyboard {
+        margin-top: 24px;
+        row-gap: 14px;
+    }
+
+    #savingsAmountKeyboard {
+        margin-top: 32px;
+        row-gap: 14px;
+    }
+
+    .buyKey,
+    .sellKey {
+        height: 30px;
+        font-size: 32px;
+    }
+
+    .savingsKey {
+        height: 28px;
+        font-size: 30px;
+    }
+
+    #buyBottomActions,
+    #sellAmountBottomActions {
+        grid-template-columns: 108px 166px;
+        bottom: 8px;
+    }
+
+    #buyConfirmBottomActions,
+    #sellConfirmBottomActions,
+    #savingsAmountBottomActions,
+    #savingsConfirmBottomActions {
+        grid-template-columns: 98px 166px;
+        bottom: 8px;
+    }
+
+    #savingsFrequencyBottomActions,
+    #savingsStartBottomActions {
+        grid-template-columns: 98px;
+        bottom: 8px;
+    }
+
+    #buyModeButton,
+    #buyNextButton,
+    #buyConfirmBackButton,
+    #buyConfirmButton,
+    #sellAmountModeButton,
+    #sellAmountNextButton,
+    #sellConfirmBackButton,
+    #sellConfirmButton,
+    #savingsAmountBackButton,
+    #savingsAmountNextButton,
+    #savingsFrequencyBackButton,
+    #savingsStartBackButton,
+    #savingsConfirmBackButton,
+    #savingsConfirmCreateButton {
+        height: 50px;
+        border-radius: 17px;
+        font-size: 16px;
+    }
+
+    #buyNextButton,
+    #buyConfirmButton,
+    #sellAmountNextButton,
+    #sellConfirmButton,
+    #savingsAmountNextButton,
+    #savingsConfirmCreateButton {
+        padding: 0 22px;
+    }
+
+    .savingsChoiceList {
+        margin-top: 38px;
+        gap: 28px;
+    }
+
+    .savingsChoiceRow strong {
+        font-size: 20px;
+    }
+
+    .savingsChoiceRow small {
+        font-size: 16px;
+    }
+
+    #savingsConfirmDetails {
+        margin-top: 22px;
+        gap: 13px;
+    }
+
+    .savingsConfirmRow span,
+    .savingsConfirmRow strong {
+        font-size: 16px;
+    }
+
+    #savingsConfirmInfoText {
+        margin-top: 20px;
+        font-size: 13px;
+    }
+}
+
+#successToast {
+    position: fixed;
+    left: 50%;
+    top: 20px;
+    transform: translateX(-50%) translateY(-135%);
+    width: min(500px, calc(100% - 28px));
+    min-height: 78px;
+    border-radius: 25px;
+    background: #b6ff00;
+    color: #050505;
+    font-size: 24px;
+    font-weight: 950;
+    letter-spacing: -0.7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    box-shadow: 0 20px 55px rgba(182, 255, 0, 0.34);
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.34s ease;
+}
+
+#successToast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+/* Sparplan: Betrag Screen kompakter und näher am Screenshot */
+
+#savingsAmountSheet {
+    padding-top: 14px;
+    padding-bottom: 92px;
+}
+
+#savingsAmountSheet h1 {
+    font-size: 40px;
+    font-weight: 950;
+    letter-spacing: -1.5px;
+    line-height: 1.08;
+    margin-top: 28px;
+}
+
+#savingsAmountDisplay {
+    margin-top: 112px;
+    text-align: center;
+    color: #242426;
+    font-size: 78px;
+    font-weight: 950;
+    letter-spacing: -3px;
+    line-height: 1;
+}
+
+#savingsAmountDisplay.hasAmount {
+    color: white;
+}
+
+#savingsAmountKeyboard {
+    margin-top: 76px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 32px;
+}
+
+.savingsKey {
+    height: 42px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 42px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.savingsKeyEmpty {
+    pointer-events: none;
+}
+
+/* Sparplan Auswahl-Screens */
+
+#savingsFrequencySheet,
+#savingsStartSheet {
+    padding-top: 14px;
+    padding-bottom: 92px;
+}
+
+#savingsFrequencySheet h1,
+#savingsStartSheet h1 {
+    font-size: 40px;
+    font-weight: 950;
+    letter-spacing: -1.5px;
+    line-height: 1.08;
+    margin-top: 28px;
+}
+
+.savingsChoiceList {
+    margin-top: 74px;
+    display: grid;
+    gap: 54px;
+}
+
+.savingsChoiceRow {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: white;
+    display: grid;
+    grid-template-columns: 58px 1fr auto;
+    align-items: center;
+    gap: 26px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.savingsChoiceRow strong {
+    font-size: 25px;
+    font-weight: 950;
+    letter-spacing: -0.7px;
+}
+
+.savingsChoiceRow small {
+    display: block;
+    color: var(--muted);
+    font-size: 20px;
+    font-weight: 900;
+    margin-top: 8px;
+    letter-spacing: -0.5px;
+}
+
+.savingsChoiceArrow {
+    color: var(--muted);
+    font-size: 45px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+/* Sparplan Bestätigung */
+
+#savingsConfirmSheet {
+    padding-top: 12px;
+    padding-bottom: 92px;
+}
+
+#savingsConfirmSheet h1 {
+    font-size: 34px;
+    line-height: 1.12;
+    margin-top: 22px;
+    max-width: 430px;
+}
+
+#savingsConfirmDetails {
+    margin-top: 50px;
+    display: grid;
+    gap: 26px;
+}
+
+.savingsConfirmRow {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 18px;
+}
+
+.savingsConfirmRow span {
+    color: var(--muted);
+    font-size: 22px;
+    font-weight: 950;
+    letter-spacing: -0.7px;
+}
+
+.savingsConfirmRow strong {
+    color: white;
+    font-size: 22px;
+    font-weight: 950;
+    text-align: right;
+    white-space: nowrap;
+}
+
+#savingsConfirmInfoText {
+    margin-top: 50px;
+    color: var(--muted);
+    font-size: 16px;
+    font-weight: 850;
+    line-height: 1.35;
+}
+
+#savingsConfirmInfoText strong {
+    color: white;
+}
+
+/* Sparplan Bottom Buttons */
+
+#savingsAmountBottomActions,
+#savingsFrequencyBottomActions,
+#savingsStartBottomActions,
+#savingsConfirmBottomActions {
+    bottom: 14px;
+}
+
+#savingsAmountBackButton,
+#savingsAmountNextButton,
+#savingsFrequencyBackButton,
+#savingsStartBackButton,
+#savingsConfirmBackButton,
+#savingsConfirmCreateButton {
+    height: 62px;
+    border-radius: 21px;
+}
+
+/* kleine Screens */
+
+@media (max-width: 390px) {
+    #successToast {
+        top: 16px;
+        width: calc(100% - 24px);
+        min-height: 72px;
+        border-radius: 23px;
+        font-size: 22px;
+    }
+
+    #savingsAmountDisplay {
+        margin-top: 92px;
+        font-size: 70px;
+    }
+
+    #savingsAmountKeyboard {
+        margin-top: 62px;
+        row-gap: 28px;
+    }
+
+    .savingsKey {
+        height: 38px;
+        font-size: 38px;
+    }
+
+    #savingsFrequencySheet h1,
+    #savingsStartSheet h1 {
+        font-size: 38px;
+        margin-top: 24px;
+    }
+
+    #savingsConfirmSheet h1 {
+        font-size: 32px;
+        margin-top: 18px;
+    }
+
+    .savingsChoiceList {
+        margin-top: 66px;
+        gap: 46px;
+    }
+
+    .savingsChoiceRow {
+        grid-template-columns: 52px 1fr auto;
+        gap: 22px;
+    }
+
+    .savingsChoiceRow strong {
+        font-size: 23px;
+    }
+
+    .savingsChoiceRow small {
+        font-size: 18px;
+    }
+
+    #savingsConfirmDetails {
+        margin-top: 42px;
+        gap: 22px;
+    }
+
+    .savingsConfirmRow span,
+    .savingsConfirmRow strong {
+        font-size: 20px;
+    }
+
+    #savingsConfirmInfoText {
+        margin-top: 38px;
+        font-size: 15px;
+    }
+
+    #savingsAmountBackButton,
+    #savingsAmountNextButton,
+    #savingsFrequencyBackButton,
+    #savingsStartBackButton,
+    #savingsConfirmBackButton,
+    #savingsConfirmCreateButton {
+        height: 60px;
+        border-radius: 20px;
+        font-size: 18px;
+    }
+}
+
+/* niedrige Screens */
+
+@media (max-height: 760px) {
+    #successToast {
+        top: 14px;
+        min-height: 70px;
+        border-radius: 22px;
+        font-size: 21px;
+    }
+
+    #savingsAmountSheet,
+    #savingsFrequencySheet,
+    #savingsStartSheet,
+    #savingsConfirmSheet {
+        padding-top: 12px;
+        padding-bottom: 86px;
+    }
+
+    #savingsAmountDisplay {
+        margin-top: 70px;
+        font-size: 64px;
+    }
+
+    #savingsAmountKeyboard {
+        margin-top: 46px;
+        row-gap: 20px;
+    }
+
+    .savingsKey {
+        height: 32px;
+        font-size: 34px;
+    }
+
+    #savingsFrequencySheet h1,
+    #savingsStartSheet h1 {
+        font-size: 36px;
+        margin-top: 18px;
+    }
+
+    #savingsConfirmSheet h1 {
+        font-size: 30px;
+        margin-top: 14px;
+    }
+
+    .savingsChoiceList {
+        margin-top: 52px;
+        gap: 36px;
+    }
+
+    #savingsConfirmDetails {
+        margin-top: 30px;
+        gap: 17px;
+    }
+
+    .savingsConfirmRow span,
+    .savingsConfirmRow strong {
+        font-size: 18px;
+    }
+
+    #savingsConfirmInfoText {
+        margin-top: 26px;
+        font-size: 14px;
+        line-height: 1.32;
+    }
+
+    #savingsAmountBackButton,
+    #savingsAmountNextButton,
+    #savingsFrequencyBackButton,
+    #savingsStartBackButton,
+    #savingsConfirmBackButton,
+    #savingsConfirmCreateButton {
+        height: 56px;
+        border-radius: 18px;
+        font-size: 17px;
+    }
+}
+
+@media (max-height: 690px) {
+    #successToast {
+        top: 12px;
+        min-height: 64px;
+        border-radius: 20px;
+        font-size: 20px;
+    }
+
+    #savingsAmountSheet,
+    #savingsFrequencySheet,
+    #savingsStartSheet,
+    #savingsConfirmSheet {
+        padding-top: 10px;
+        padding-bottom: 76px;
+    }
+
+    #savingsAmountDisplay {
+        margin-top: 44px;
+        font-size: 52px;
+    }
+
+    #savingsAmountKeyboard {
+        margin-top: 32px;
+        row-gap: 14px;
+    }
+
+    .savingsKey {
+        height: 28px;
+        font-size: 30px;
+    }
+
+    #savingsFrequencySheet h1,
+    #savingsStartSheet h1 {
+        font-size: 32px;
+        margin-top: 14px;
+    }
+
+    #savingsConfirmSheet h1 {
+        font-size: 27px;
+        margin-top: 10px;
+    }
+
+    .savingsChoiceList {
+        margin-top: 38px;
+        gap: 28px;
+    }
+
+    .savingsChoiceRow strong {
+        font-size: 20px;
+    }
+
+    .savingsChoiceRow small {
+        font-size: 16px;
+    }
+
+    #savingsConfirmDetails {
+        margin-top: 22px;
+        gap: 13px;
+    }
+
+    .savingsConfirmRow span,
+    .savingsConfirmRow strong {
+        font-size: 16px;
+    }
+
+    #savingsConfirmInfoText {
+        margin-top: 20px;
+        font-size: 13px;
+    }
+
+    #savingsAmountBackButton,
+    #savingsAmountNextButton,
+    #savingsFrequencyBackButton,
+    #savingsStartBackButton,
+    #savingsConfirmBackButton,
+    #savingsConfirmCreateButton {
+        height: 50px;
+        border-radius: 17px;
+        font-size: 16px;
+    }
+}
+
+#assetTransactionsSection {
+    padding-bottom: 42px;
+}
+
+#assetTransactionsList {
+    display: grid;
+    gap: 34px;
+}
+
+.assetTransactionRow {
+    display: grid;
+    grid-template-columns: 46px 1fr auto;
+    align-items: center;
+    gap: 18px;
+}
+
+.assetTransactionIcon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #1d1d1f;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 950;
+    line-height: 1;
+}
+
+.assetTransactionIcon.buyIcon {
+    background: var(--asset-accent);
+    color: var(--asset-action-text);
+}
+
+.assetTransactionIcon.sellIcon {
+    background: #111111;
+    color: white;
+    border: 1px solid var(--border);
+}
+
+.assetTransactionInfo {
+    min-width: 0;
+}
+
+.assetTransactionInfo h3 {
+    font-size: 22px;
+    font-weight: 950;
+    letter-spacing: -0.6px;
+    margin-bottom: 7px;
+}
+
+.assetTransactionInfo p {
+    color: var(--muted);
+    font-size: 18px;
+    font-weight: 850;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.assetTransactionAmount {
+    color: white;
+    font-size: 21px;
+    font-weight: 950;
+    white-space: nowrap;
+}
+
+.assetTransactionAmount.positive {
+    color: var(--green);
+}
+
+#assetTransactionsEmptyText {
+    color: var(--muted);
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1.35;
+}
+
+@media (max-width: 390px) {
+    #assetTransactionsList {
+        gap: 30px;
+    }
+
+    .assetTransactionInfo h3 {
+        font-size: 20px;
+    }
+
+    .assetTransactionInfo p {
+        font-size: 16px;
+    }
+
+    .assetTransactionAmount {
+        font-size: 19px;
+    }
+}

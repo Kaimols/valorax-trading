@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ValoraX Crypto Wallet</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg: #050505;
+            --card: #111111;
+            --card-light: #1b1c1e;
+            --text: #ffffff;
+            --muted: #666a73;
+            --muted-strong: #8e8e93;
+            --border: rgba(255, 255, 255, 0.08);
+            --green: #4ade80;
+            --red: #ef4444;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            overflow-x: hidden;
+        }
+
+        #app {
+            width: min(520px, 100%);
+            min-height: 100vh;
+            margin: 0 auto;
+            padding-bottom: 118px;
+            background: var(--bg);
+            position: relative;
+        }
+
+        header {
+            padding: 22px 20px 10px;
+            position: sticky;
+            top: 0;
+            background: rgba(5, 5, 5, 0.88);
+            backdrop-filter: blur(18px);
+            z-index: 20;
+        }
+
+        #topBar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        #topTabs {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+        }
+
+        .topTab {
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            font-size: 28px;
+            font-weight: 850;
+            letter-spacing: -1px;
+            cursor: pointer;
+        }
+
+        .topTab.active {
+            color: white;
+        }
+
+        #profileDot {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: none;
+            background: #6b7280;
+            cursor: pointer;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profileIcon {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 3px solid #050505;
+            position: relative;
+            display: block;
+            margin-top: -8px;
+        }
+
+        .profileIcon::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: -18px;
+            transform: translateX(-50%);
+            width: 26px;
+            height: 14px;
+            border: 3px solid #050505;
+            border-bottom: none;
+            border-radius: 18px 18px 0 0;
+        }
+
+        main {
+            padding: 54px 20px 24px;
+        }
+
+        #hero {
+            position: relative;
+        }
+
+        #pageLabel {
+            color: var(--muted);
+            font-size: 19px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+        }
+
+        #walletBalance {
+            font-size: 45px;
+            font-weight: 900;
+            letter-spacing: -1.8px;
+            line-height: 1.05;
+            display: inline-block;
+        }
+
+        #walletChange {
+            display: inline-block;
+            margin-left: 10px;
+            color: white;
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        #walletChange.positiveGain {
+            color: var(--green);
+        }
+
+        #walletChange.negativeGain {
+            color: var(--red);
+        }
+
+        #dropArrow {
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            color: var(--muted);
+            font-size: 34px;
+            font-weight: 900;
+        }
+
+        #investments {
+            margin-top: 78px;
+        }
+
+        #investmentsHeader {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 34px;
+        }
+
+        #investmentsHeader h2 {
+            font-size: 23px;
+            font-weight: 900;
+            letter-spacing: -0.7px;
+        }
+
+        #investmentsHeader button {
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            font-size: 20px;
+            font-weight: 850;
+            cursor: pointer;
+        }
+
+        #assetsList {
+            min-height: 80px;
+        }
+
+        .assetRow {
+            display: grid;
+            grid-template-columns: 50px 1fr auto;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 32px;
+            cursor: pointer;
+        }
+
+        .assetIcon {
+            width: 39px;
+            height: 39px;
+            border-radius: 50%;
+            background: #111111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+            color: white;
+            font-size: 18px;
+            font-weight: 950;
+        }
+
+        .assetIcon.logoBgWhite {
+            background: white;
+            color: black;
+        }
+
+        .assetIcon.logoBgBlack {
+            background: black;
+            color: white;
+            border: 1px solid var(--border);
+        }
+
+        .assetIcon.logoBgGray {
+            background: #1d1d1f;
+            color: white;
+        }
+
+        .assetIcon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .assetInfo h3 {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: -0.6px;
+            margin-bottom: 7px;
+        }
+
+        .assetInfo p {
+            color: var(--muted);
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .assetRight {
+            font-size: 22px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .assetRight.positiveGain {
+            color: var(--green);
+        }
+
+        .assetRight.negativeGain {
+            color: var(--red);
+        }
+
+        #emptyAssets {
+            display: none;
+            color: var(--muted);
+            font-size: 20px;
+            font-weight: 850;
+            line-height: 1.35;
+            margin-top: 6px;
+        }
+
+        #warningCard {
+            margin-top: 62px;
+            padding: 28px 30px;
+            border-radius: 27px;
+            background: var(--card-light);
+            border: 1px solid var(--border);
+        }
+
+        #warningCard h2 {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: -0.6px;
+            margin-bottom: 14px;
+        }
+
+        #warningCard p {
+            color: var(--muted-strong);
+            font-size: 18px;
+            font-weight: 800;
+            line-height: 1.45;
+        }
+
+        #warningCard span {
+            color: var(--muted);
+            font-size: 25px;
+            font-weight: 900;
+        }
+
+        #quickCards {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            margin-top: 76px;
+            padding-bottom: 6px;
+            scrollbar-width: none;
+        }
+
+        #quickCards::-webkit-scrollbar {
+            display: none;
+        }
+
+        .quickCard {
+            min-width: 178px;
+            height: 96px;
+            border-radius: 23px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: white;
+            padding: 20px;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .quickCard.fullQuickCard {
+            min-width: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        .quickCard h3 {
+            color: var(--muted);
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            margin-bottom: 9px;
+        }
+
+        .quickCard strong {
+            font-size: 22px;
+            font-weight: 900;
+        }
+
+        #riskText {
+            margin-top: 82px;
+            color: var(--muted);
+            font-size: 16px;
+            font-weight: 800;
+            line-height: 1.35;
+            text-align: left;
+        }
+
+        #bottomActions {
+            position: fixed;
+            left: 50%;
+            bottom: 18px;
+            transform: translateX(-50%);
+            width: min(520px, 100%);
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            z-index: 35;
+            pointer-events: none;
+        }
+
+        #bottomActions button {
+            height: 62px;
+            border-radius: 22px;
+            border: none;
+            background: #f2f2f2;
+            color: black;
+            font-size: 18px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 12px 34px rgba(0, 0, 0, 0.5);
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 22px;
+        }
+
+        #bottomActions span {
+            font-size: 30px;
+            line-height: 1;
+        }
+
+        #watchlistSheet {
+            position: fixed;
+            left: 50%;
+            top: 0;
+            bottom: auto;
+            transform: translateX(-50%) translateY(100%);
+            width: min(520px, 100%);
+            min-height: 100vh;
+            background: #050505;
+            color: white;
+            z-index: 90;
+            padding: 18px 20px 130px;
+            transition: 0.28s ease;
+            overflow-y: auto;
+        }
+
+        #watchlistSheet.open {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .sheetHandle {
+            width: 46px;
+            height: 5px;
+            border-radius: 99px;
+            background: #f2f2f2;
+            margin: 0 auto 18px;
+            cursor: pointer;
+        }
+
+        #watchlistSheet h1 {
+            font-size: 42px;
+            font-weight: 900;
+            letter-spacing: -1.4px;
+            margin-top: 14px;
+        }
+
+        #watchlistSubline {
+            color: var(--muted);
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: -0.7px;
+            margin-top: 10px;
+            margin-bottom: 46px;
+        }
+
+        #watchlistList {
+            display: grid;
+            gap: 0;
+        }
+
+        #emptyWatchlist {
+            display: none;
+            color: var(--muted);
+            font-size: 20px;
+            font-weight: 850;
+            line-height: 1.35;
+            margin-top: 8px;
+        }
+
+        .topTab:active,
+        .quickCard:active,
+        .assetRow:active,
+        #profileDot:active,
+        #bottomActions button:active {
+            transform: scale(0.98);
+        }
+
+        @media (min-width: 760px) {
+            body {
+                background:
+                    radial-gradient(circle at top, rgba(34, 197, 94, 0.08), transparent 28%),
+                    #000;
+            }
+
+            #app {
+                border-left: 1px solid var(--border);
+                border-right: 1px solid var(--border);
+            }
+        }
+
+        @media (max-width: 380px) {
+            .topTab {
+                font-size: 25px;
+            }
+
+            #walletBalance {
+                font-size: 40px;
+            }
+
+            .assetRight {
+                font-size: 20px;
+            }
+
+            .assetInfo h3 {
+                font-size: 20px;
+            }
+
+            .assetInfo p {
+                font-size: 16px;
+            }
+
+            #bottomActions button {
+                font-size: 16px;
+                padding: 0 18px;
+            }
+
+            #watchlistSheet h1 {
+                font-size: 39px;
+            }
+
+            #watchlistSubline {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <header>
+            <div id="topBar">
+                <div id="topTabs">
+                    <button class="topTab active" id="portfolioTab">Portfolio</button>
+                    <button class="topTab" id="cashTab">Cash</button>
+                </div>
+
+                <button id="profileDot" aria-label="Kontoeinstellungen">
+                    <span class="profileIcon"></span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <section id="hero">
+                <div id="pageLabel">Crypto Wallet</div>
+
+                <div>
+                    <span id="walletBalance">0,00 €</span>
+                    <span id="walletChange">− €</span>
+                </div>
+
+                <div id="dropArrow">⌄</div>
+            </section>
+
+            <section id="investments">
+                <div id="investmentsHeader">
+                    <h2>Investments</h2>
+                    <button id="performanceButton">Seit Kauf €</button>
+                </div>
+
+                <div id="assetsList"></div>
+
+                <p id="emptyAssets">Noch keine Cryptos im Portfolio</p>
+            </section>
+
+            <section id="warningCard">
+                <h2>Vorsicht vor SMS-Betrug&nbsp; ›</h2>
+                <p>Wir werden dich niemals bitten, Crypto an ein „sicheres Wallet“ zu transferieren.</p>
+                <span>··</span>
+            </section>
+
+            <section id="quickCards">
+                <button class="quickCard fullQuickCard" id="watchlistButton">
+                    <span>
+                        <h3>Watchlist</h3>
+                        <strong id="watchlistCount">0</strong>
+                    </span>
+
+                    <strong>›</strong>
+                </button>
+            </section>
+
+            <p id="riskText">
+                Die angegebenen Preise beziehen sich auf den unmittelbar vorangegangenen Geldkurs an der Börse. Cryptos sind aufgrund von Kursschwankungen sehr risikoreiche Investments. Die frühere Wertentwicklung ist kein Indikator für zukünftige Ergebnisse. Alle angezeigten Daten sind näherungsweise und können aufgrund von Verbindungsverzögerungen veraltet sein.
+            </p>
+        </main>
+
+        <div id="bottomActions">
+            <button id="searchButton">
+                Suche
+                <span>⌕</span>
+            </button>
+
+            <button id="transferButton">
+                Überweisen
+                <span>⌃</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="watchlistSheet">
+        <div class="sheetHandle" id="watchlistHandle"></div>
+
+        <h1>Watchlist</h1>
+        <p id="watchlistSubline">Deine beobachteten Cryptos</p>
+
+        <div id="watchlistList"></div>
+        <p id="emptyWatchlist">Noch keine Cryptos auf deiner Watchlist.</p>
+    </div>
+
+    <script src="assets.js"></script>
+    <script src="market.js"></script>
+
+    <script>
+    let currentUser = null;
+    let cryptos = {};
+    let performanceMode = "EUR";
+
+    function getCryptoAssets() {
+        const cryptoAssets = {};
+
+        Object.keys(assetData).forEach(function (symbol) {
+            if (assetData[symbol].type === "CRYPTO") {
+                cryptoAssets[symbol] = assetData[symbol];
+            }
+        });
+
+        return cryptoAssets;
+    }
+
+    function refreshCryptoAssets() {
+        cryptos = getCryptoAssets();
+    }
+
+    function readStorage(key, fallback) {
+        try {
+            return JSON.parse(localStorage.getItem(key)) || fallback;
+        } catch (error) {
+            return fallback;
+        }
+    }
+
+    function getUsers() {
+        return readStorage("valorax_users", []);
+    }
+
+    function saveUsers(users) {
+        localStorage.setItem("valorax_users", JSON.stringify(users));
+    }
+
+    function getCurrentUser() {
+        return readStorage("valorax_current_user", null);
+    }
+
+    function setCurrentUser(user) {
+        localStorage.setItem("valorax_current_user", JSON.stringify({
+            id: user.id,
+            phone: user.phone,
+            email: user.email,
+            balance: user.balance
+        }));
+    }
+
+    function formatEuro(value) {
+        return Number(value).toLocaleString("de-DE", {
+            style: "currency",
+            currency: "EUR"
+        });
+    }
+
+    function formatPercent(value) {
+        return Number(value).toLocaleString("de-DE", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }) + " %";
+    }
+
+    function saveCurrentUser() {
+        const users = getUsers();
+
+        const updatedUsers = users.map(function (user) {
+            if (user.id === currentUser.id) {
+                return currentUser;
+            }
+
+            return user;
+        });
+
+        saveUsers(updatedUsers);
+        setCurrentUser(currentUser);
+    }
+
+    function normalizeWatchlistItems(items) {
+        if (!Array.isArray(items)) {
+            return [];
+        }
+
+        return items
+            .map(function (item) {
+                if (typeof item === "string") {
+                    return item;
+                }
+
+                return item.symbol || item.asset || item.subtitle || "";
+            })
+            .filter(function (symbol) {
+                return symbol && cryptos[symbol];
+            });
+    }
+
+    function ensureWatchlist() {
+        const legacyWatchlist = normalizeWatchlistItems(readStorage("valorax_watchlist", []));
+        const userWatchlist = normalizeWatchlistItems(currentUser.cryptoWatchlist || []);
+        const oldUserWatchlist = normalizeWatchlistItems(currentUser.watchlist || []);
+
+        const merged = []
+            .concat(userWatchlist)
+            .concat(oldUserWatchlist)
+            .concat(legacyWatchlist);
+
+        currentUser.cryptoWatchlist = Array.from(new Set(merged)).filter(function (symbol) {
+            return cryptos[symbol];
+        });
+
+        localStorage.setItem("valorax_watchlist", JSON.stringify(currentUser.cryptoWatchlist));
+    }
+
+    function getWatchlistSymbols() {
+        if (!currentUser || !currentUser.cryptoWatchlist) {
+            return [];
+        }
+
+        return currentUser.cryptoWatchlist.filter(function (symbol) {
+            return cryptos[symbol];
+        });
+    }
+
+    function loadUser() {
+        const savedUser = getCurrentUser();
+        const users = getUsers();
+
+        if (!savedUser) {
+            window.location.href = "index.html";
+            return;
+        }
+
+        currentUser = users.find(function (user) {
+            return user.id === savedUser.id;
+        });
+
+        if (!currentUser) {
+            localStorage.removeItem("valorax_current_user");
+            window.location.href = "index.html";
+            return;
+        }
+
+        if (typeof currentUser.balance !== "number") {
+            currentUser.balance = 0;
+        }
+
+        if (!currentUser.cryptoPortfolio) {
+            currentUser.cryptoPortfolio = {};
+        }
+
+        refreshCryptoAssets();
+
+        Object.keys(cryptos).forEach(function (symbol) {
+            if (typeof currentUser.cryptoPortfolio[symbol] !== "number") {
+                currentUser.cryptoPortfolio[symbol] = 0;
+            }
+        });
+
+        if (!currentUser.cryptoTrades) {
+            currentUser.cryptoTrades = [];
+        }
+
+        if (!currentUser.cryptoWatchlist) {
+            currentUser.cryptoWatchlist = [];
+        }
+
+        ensureWatchlist();
+
+        saveCurrentUser();
+        updatePage();
+    }
+
+    function getCryptoAmount(symbol) {
+        return currentUser.cryptoPortfolio[symbol] || 0;
+    }
+
+    function getCryptoValue(symbol) {
+        return getCryptoAmount(symbol) * cryptos[symbol].price;
+    }
+
+    function getWalletValue() {
+        let value = 0;
+
+        Object.keys(cryptos).forEach(function (symbol) {
+            value += getCryptoValue(symbol);
+        });
+
+        return value;
+    }
+
+    function getOpenCostBasis(symbol) {
+        const trades = (currentUser.cryptoTrades || [])
+            .filter(function (trade) {
+                return trade.asset === symbol;
+            })
+            .slice()
+            .sort(function (a, b) {
+                return new Date(a.date).getTime() - new Date(b.date).getTime();
+            });
+
+        let openUnits = 0;
+        let openCost = 0;
+
+        trades.forEach(function (trade) {
+            const units = Number(trade.units) || 0;
+            const amountEuro = Number(trade.amountEuro) || 0;
+
+            if (trade.type === "BUY") {
+                openUnits += units;
+                openCost += amountEuro;
+            }
+
+            if (trade.type === "SELL") {
+                if (openUnits <= 0) {
+                    return;
+                }
+
+                const averageCost = openCost / openUnits;
+                const soldUnits = Math.min(units, openUnits);
+
+                openUnits -= soldUnits;
+                openCost -= soldUnits * averageCost;
+
+                if (openUnits < 0.0000000001) {
+                    openUnits = 0;
+                    openCost = 0;
+                }
+            }
+        });
+
+        return {
+            units: openUnits,
+            cost: openCost
+        };
+    }
+
+    function getAverageEntryPrice(symbol) {
+        const basis = getOpenCostBasis(symbol);
+
+        if (basis.units <= 0 || basis.cost <= 0) {
+            return 0;
+        }
+
+        return basis.cost / basis.units;
+    }
+
+    function getInvestedValue(symbol) {
+        const amount = getCryptoAmount(symbol);
+        const entryPrice = getAverageEntryPrice(symbol);
+
+        if (amount <= 0 || entryPrice <= 0) {
+            return 0;
+        }
+
+        return amount * entryPrice;
+    }
+
+    function getCryptoGain(symbol) {
+        const value = getCryptoValue(symbol);
+        const invested = getInvestedValue(symbol);
+
+        if (value <= 0 || invested <= 0) {
+            return 0;
+        }
+
+        return value - invested;
+    }
+
+    function getCryptoGainPercent(symbol) {
+        const invested = getInvestedValue(symbol);
+        const gain = getCryptoGain(symbol);
+
+        if (invested <= 0) {
+            return 0;
+        }
+
+        return (gain / invested) * 100;
+    }
+
+    function getWalletInvestedValue() {
+        let invested = 0;
+
+        Object.keys(cryptos).forEach(function (symbol) {
+            invested += getInvestedValue(symbol);
+        });
+
+        return invested;
+    }
+
+    function getWalletGain() {
+        return getWalletValue() - getWalletInvestedValue();
+    }
+
+    function getWalletGainPercent() {
+        const invested = getWalletInvestedValue();
+
+        if (invested <= 0) {
+            return 0;
+        }
+
+        return (getWalletGain() / invested) * 100;
+    }
+
+    function getPerformanceText(valueEuro, valuePercent) {
+        const value = performanceMode === "EUR" ? valueEuro : valuePercent;
+
+        if (performanceMode === "EUR") {
+            return (value >= 0 ? "▲ " : "▼ ") + formatEuro(Math.abs(value));
+        }
+
+        return (value >= 0 ? "▲ " : "▼ ") + formatPercent(Math.abs(value));
+    }
+
+    function updatePerformanceButton() {
+        document.getElementById("performanceButton").textContent =
+            performanceMode === "EUR" ? "Seit Kauf €" : "Seit Kauf %";
+    }
+
+    function updateWalletChange() {
+        const walletChange = document.getElementById("walletChange");
+        const walletValue = getWalletValue();
+        const walletGain = getWalletGain();
+        const walletGainPercent = getWalletGainPercent();
+
+        walletChange.classList.remove("positiveGain", "negativeGain");
+
+        if (walletValue <= 0 || getWalletInvestedValue() <= 0) {
+            walletChange.textContent = performanceMode === "EUR" ? "− €" : "− %";
+            return;
+        }
+
+        walletChange.textContent = getPerformanceText(walletGain, walletGainPercent);
+        walletChange.classList.add(walletGain >= 0 ? "positiveGain" : "negativeGain");
+    }
+
+    function getIconBackgroundClass(symbol) {
+        const asset = cryptos[symbol] || assetData[symbol];
+        const background = asset && asset.iconBackground ? asset.iconBackground : "gray";
+
+        if (background === "white") {
+            return "logoBgWhite";
+        }
+
+        if (background === "black") {
+            return "logoBgBlack";
+        }
+
+        return "logoBgGray";
+    }
+
+    function createAssetIcon(symbol) {
+        const crypto = cryptos[symbol];
+        const icon = document.createElement("div");
+        const fallback = crypto.name.charAt(0).toUpperCase();
+
+        icon.className = "assetIcon " + getIconBackgroundClass(symbol);
+
+        if (!crypto.icon) {
+            icon.textContent = fallback;
+            return icon;
+        }
+
+        const image = document.createElement("img");
+        image.src = crypto.icon;
+        image.alt = crypto.name + " Logo";
+        image.onerror = function () {
+            icon.innerHTML = "";
+            icon.textContent = fallback;
+        };
+
+        icon.appendChild(image);
+
+        return icon;
+    }
+
+    function createCryptoRow(symbol) {
+        const crypto = cryptos[symbol];
+        const amount = getCryptoAmount(symbol);
+        const value = getCryptoValue(symbol);
+        const gain = getCryptoGain(symbol);
+        const gainPercent = getCryptoGainPercent(symbol);
+
+        const row = document.createElement("div");
+        const icon = createAssetIcon(symbol);
+        const info = document.createElement("div");
+        const title = document.createElement("h3");
+        const subtitle = document.createElement("p");
+        const right = document.createElement("div");
+
+        row.className = "assetRow";
+        row.dataset.symbol = symbol;
+
+        info.className = "assetInfo";
+        right.className = "assetRight " + (gain >= 0 ? "positiveGain" : "negativeGain");
+
+        title.textContent = crypto.name;
+        subtitle.textContent = formatEuro(value) + " · " + amount.toLocaleString("de-DE", {
+            maximumFractionDigits: 8
+        }) + " Coins";
+
+        right.textContent = getPerformanceText(gain, gainPercent);
+
+        info.appendChild(title);
+        info.appendChild(subtitle);
+
+        row.appendChild(icon);
+        row.appendChild(info);
+        row.appendChild(right);
+
+        row.onclick = function () {
+            window.location.href = "asset.html?symbol=" + encodeURIComponent(symbol);
+        };
+
+        return row;
+    }
+
+    function createWatchlistRow(symbol) {
+        const crypto = cryptos[symbol];
+
+        const row = document.createElement("div");
+        const icon = createAssetIcon(symbol);
+        const info = document.createElement("div");
+        const title = document.createElement("h3");
+        const subtitle = document.createElement("p");
+        const right = document.createElement("div");
+
+        row.className = "assetRow";
+        row.dataset.symbol = symbol;
+
+        info.className = "assetInfo";
+        right.className = "assetRight";
+
+        if (crypto.changeClass === "positive") {
+            right.classList.add("positiveGain");
+        }
+
+        if (crypto.changeClass === "negative" || crypto.changeClass === "blueNegative") {
+            right.classList.add("negativeGain");
+        }
+
+        title.textContent = crypto.name;
+        subtitle.textContent = formatEuro(crypto.price);
+        right.textContent = crypto.change || "–";
+
+        info.appendChild(title);
+        info.appendChild(subtitle);
+
+        row.appendChild(icon);
+        row.appendChild(info);
+        row.appendChild(right);
+
+        row.onclick = function () {
+            window.location.href = "asset.html?symbol=" + encodeURIComponent(symbol);
+        };
+
+        return row;
+    }
+
+    function renderAssets() {
+        const list = document.getElementById("assetsList");
+        const empty = document.getElementById("emptyAssets");
+
+        list.innerHTML = "";
+
+        const ownedCryptos = Object.keys(cryptos).filter(function (symbol) {
+            return getCryptoAmount(symbol) > 0;
+        });
+
+        if (ownedCryptos.length === 0) {
+            empty.style.display = "block";
+            return;
+        }
+
+        empty.style.display = "none";
+
+        ownedCryptos.forEach(function (symbol) {
+            list.appendChild(createCryptoRow(symbol));
+        });
+    }
+
+    function renderWatchlistCount() {
+        document.getElementById("watchlistCount").textContent = getWatchlistSymbols().length;
+    }
+
+    function renderWatchlistSheet() {
+        const list = document.getElementById("watchlistList");
+        const empty = document.getElementById("emptyWatchlist");
+        const symbols = getWatchlistSymbols();
+
+        list.innerHTML = "";
+
+        if (symbols.length === 0) {
+            empty.style.display = "block";
+            return;
+        }
+
+        empty.style.display = "none";
+
+        symbols.forEach(function (symbol) {
+            list.appendChild(createWatchlistRow(symbol));
+        });
+    }
+
+    function openWatchlistSheet() {
+        renderWatchlistSheet();
+        document.getElementById("watchlistSheet").classList.add("open");
+    }
+
+    function closeWatchlistSheet() {
+        document.getElementById("watchlistSheet").classList.remove("open");
+    }
+
+    function updatePage() {
+        refreshCryptoAssets();
+        ensureWatchlist();
+
+        document.getElementById("walletBalance").textContent = formatEuro(getWalletValue());
+
+        updatePerformanceButton();
+        updateWalletChange();
+        renderAssets();
+        renderWatchlistCount();
+
+        if (document.getElementById("watchlistSheet").classList.contains("open")) {
+            renderWatchlistSheet();
+        }
+    }
+
+    document.getElementById("portfolioTab").onclick = function () {
+        window.location.href = "dashboard.html";
+    };
+
+    document.getElementById("cashTab").onclick = function () {
+        window.location.href = "dashboard.html";
+    };
+
+    document.getElementById("profileDot").onclick = function () {
+        window.location.href = "konto.html";
+    };
+
+    document.getElementById("searchButton").onclick = function () {
+        window.location.href = "search.html";
+    };
+
+    document.getElementById("transferButton").onclick = function () {
+        window.location.href = "dashboard.html";
+    };
+
+    document.getElementById("performanceButton").onclick = function () {
+        performanceMode = performanceMode === "EUR" ? "PERCENT" : "EUR";
+        updatePage();
+    };
+
+    document.getElementById("watchlistButton").onclick = function () {
+        openWatchlistSheet();
+    };
+
+    document.getElementById("watchlistHandle").onclick = function () {
+        closeWatchlistSheet();
+    };
+
+    loadUser();
+
+    if (typeof startCryptoMarketUpdates === "function") {
+        startCryptoMarketUpdates(function () {
+            updatePage();
+        });
+    }
+</script>
+
+</body>
+</html>
